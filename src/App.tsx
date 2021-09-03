@@ -3,7 +3,6 @@ import { CommandPaletteWrapper } from './CommandPalette';
 import CommandPaletteContext from './CommandPaletteContext';
 import Item from './Item';
 import ItemsStoreContext from './ItemsStoreContext';
-import ItemsStoreProvider from './ItemsStoreProvider';
 import useItem from './useItem';
 import useKeybind from './useKeybind';
 
@@ -24,25 +23,23 @@ function App() {
 		<CommandPaletteContext.Provider
 			value={[commandPaletteOpen, setCommandPaletteOpen]}
 		>
-			<ItemsStoreProvider>
-				{commandPaletteOpen && <CommandPaletteWrapper />}
-				<div
-					style={{
-						display: 'flex',
-						flexDirection: 'column',
-						width: 'calc(min(30rem, 50vw))',
-						margin: '1rem auto',
-					}}
-				>
-					<h1>Planner</h1>
+			{commandPaletteOpen && <CommandPaletteWrapper />}
+			<div
+				style={{
+					display: 'flex',
+					flexDirection: 'column',
+					width: 'calc(min(30rem, 50vw))',
+					margin: '1rem auto',
+				}}
+			>
+				<h1>Planner</h1>
 
-					<div style={{ display: 'flex', flexDirection: 'column' }}>
-						{root?.dependencies.map(id => (
-							<Item key={id} item={getItem(id)!} />
-						))}
-					</div>
+				<div style={{ display: 'flex', flexDirection: 'column' }}>
+					{root?.dependencies.map(id => (
+						<Item key={id} item={getItem(id)!} />
+					))}
 				</div>
-			</ItemsStoreProvider>
+			</div>
 		</CommandPaletteContext.Provider>
 	);
 }

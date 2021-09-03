@@ -1,8 +1,15 @@
-import { useCallback, useContext, useMemo, useState } from 'react';
+import {
+	useCallback,
+	useContext,
+	useDebugValue,
+	useMemo,
+	useState,
+} from 'react';
 import ItemsStoreContext from './ItemsStoreContext';
 import { ItemProps } from './types';
 
 function Item({ item }: { item: ItemProps }) {
+	useDebugValue(item);
 	const {
 		items,
 		getItem,

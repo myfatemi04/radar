@@ -1,11 +1,4 @@
-import {
-	Dispatch,
-	FC,
-	SetStateAction,
-	useCallback,
-	useMemo,
-	useState,
-} from 'react';
+import { FC, useCallback, useMemo, useState } from 'react';
 import ItemsStoreContext, { ItemsStoreContextProps } from './ItemsStoreContext';
 import { ItemProps } from './types';
 
@@ -36,7 +29,7 @@ function saveItems(items: ItemProps[]) {
 const ItemsStoreProvider: FC = ({ children }) => {
 	const [items, setItems_internal] = useState(() => loadItems());
 
-	const setItems: Dispatch<SetStateAction<ItemProps[]>> = useCallback(items => {
+	const setItems: typeof setItems_internal = useCallback(items => {
 		setItems_internal(oldItems => {
 			const result = typeof items === 'function' ? items(oldItems) : items;
 			saveItems(result);
