@@ -14,6 +14,42 @@ export function useCreateDependencyWithName(id: string) {
 	return createItemAsDependency;
 }
 
+export function getItemsSearchResults(
+	items: ItemProps[],
+	text: string,
+	rootItemId: string
+) {
+	const getItem = (id: string) => items.find(item => item.id === id);
+	const searchKey = text.toLowerCase();
+	if (!searchKey) {
+		return [];
+	}
+	return items.filter(other => {
+		if (other.id === rootItemId) {
+			return false;
+		}
+
+		// If the subitem is a parent of this item, there would be a circular dependency
+		if (isDescendant(other.id, rootItemId, getItem)) {
+			return false;
+		}
+
+		// If the subitem is already a descendant of this item, we shouldn't suggest adding it
+		if (isDescendant(rootItemId, other.id, getItem)) {
+			return false;
+		}
+
+		if (
+			other.name.toLowerCase().includes(searchKey) ||
+			other.description.toLowerCase().includes(searchKey)
+		) {
+			return true;
+		}
+
+		return false;
+	});
+}
+
 export function useItemsSearchResults(text: string, root: ItemProps) {
 	const { items, getItem } = useContext(ItemStoreContext);
 

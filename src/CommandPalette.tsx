@@ -4,6 +4,7 @@ import createEmptyItem from './createEmptyItem';
 import isNaturalNumber from './isDigit';
 import ItemStoreContext from './ItemStoreContext';
 import NavigateToPreviousRootItemContext from './NavigateToPreviousRootItemContext';
+import useCommandPaletteSuggestions from './useCommandPaletteCompletions';
 import useKeybind from './useKeybind';
 
 export function CommandPalette({
@@ -75,6 +76,8 @@ export function CommandPalette({
 
 	useKeybind('Enter', onEnteredCommand);
 
+	const suggestions = useCommandPaletteSuggestions(command);
+
 	return (
 		<div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
 			<input
@@ -92,6 +95,7 @@ export function CommandPalette({
 					backgroundColor: '#202020',
 				}}
 			/>
+			{suggestions}
 		</div>
 	);
 }
