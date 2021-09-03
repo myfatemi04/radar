@@ -1,14 +1,14 @@
 import { useCallback, useContext, useState } from 'react';
 import { CommandPaletteContext, RootItemIdContext } from './AppContexts';
 import createEmptyItem from './createEmptyItem';
-import ItemsStoreContext from './ItemsStoreContext';
+import ItemStoreContext from './ItemStoreContext';
 import useKeybind from './useKeybind';
 
 export function CommandPalette() {
 	const [, setCommandPaletteOpen] = useContext(CommandPaletteContext);
 	const [command, setCommand] = useState('');
 	const [rootItemId] = useContext(RootItemIdContext);
-	const I = useContext(ItemsStoreContext);
+	const I = useContext(ItemStoreContext);
 
 	useKeybind(
 		'Escape',

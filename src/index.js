@@ -1,14 +1,13 @@
-import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
+import './index.css';
+import ItemStoreProvider from './ItemStoreProvider';
 import reportWebVitals from './reportWebVitals';
-import ItemsStoreProvider from './ItemsStoreProvider';
 
 ReactDOM.render(
-	<ItemsStoreProvider>
+	<ItemStoreProvider>
 		<App />
-	</ItemsStoreProvider>,
+	</ItemStoreProvider>,
 	document.getElementById('root')
 );
 

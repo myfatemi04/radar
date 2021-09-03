@@ -12,7 +12,7 @@ export type ItemsStoreContextProps = {
 	toggleItemCompleted: (id: string) => void;
 };
 
-const ItemsStoreContext = createContext<ItemsStoreContextProps>({
+const ItemStoreContext = createContext<ItemsStoreContextProps>({
 	items: [],
 	setItems: (() => {}) as Dispatch<SetStateAction<ItemProps[]>>,
 	removeItem(id: string) {
@@ -36,4 +36,4 @@ const ItemsStoreContext = createContext<ItemsStoreContextProps>({
 	},
 });
 
-export default ItemsStoreContext;
+export default ItemStoreContext;

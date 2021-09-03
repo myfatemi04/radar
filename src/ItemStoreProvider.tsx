@@ -1,5 +1,5 @@
 import { FC, useCallback, useEffect, useMemo, useState } from 'react';
-import ItemsStoreContext, { ItemsStoreContextProps } from './ItemsStoreContext';
+import ItemStoreContext, { ItemsStoreContextProps } from './ItemStoreContext';
 import { ItemProps } from './types';
 
 const defaultItems: ItemProps[] = [
@@ -27,7 +27,7 @@ function saveItems(items: ItemProps[]) {
 	localStorage.setItem('items', JSON.stringify(items));
 }
 
-const ItemsStoreProvider: FC = ({ children }) => {
+const ItemStoreProvider: FC = ({ children }) => {
 	const [items, setItems_internal] = useState(() => loadItems());
 
 	useEffect(() => {
@@ -175,10 +175,10 @@ const ItemsStoreProvider: FC = ({ children }) => {
 	);
 
 	return (
-		<ItemsStoreContext.Provider value={value}>
+		<ItemStoreContext.Provider value={value}>
 			{children}
-		</ItemsStoreContext.Provider>
+		</ItemStoreContext.Provider>
 	);
 };
 
-export default ItemsStoreProvider;
+export default ItemStoreProvider;

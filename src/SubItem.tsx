@@ -1,48 +1,14 @@
-import {
-	useCallback,
-	useContext,
-	useDebugValue,
-	useMemo,
-	useState,
-} from 'react';
+import { useContext, useDebugValue } from 'react';
 import { RootItemIdContext } from './AppContexts';
-import createEmptyItem from './createEmptyItem';
-import ItemsStoreContext from './ItemsStoreContext';
+import ItemStoreContext from './ItemStoreContext';
 import { ItemProps } from './types';
 
 function SubItem({ item }: { item: ItemProps }) {
 	useDebugValue(item);
-	const {
-		items,
-		getItem,
-		addItem,
-		removeItem,
-		addDependencyToItem,
-		removeDependencyFromItem,
-		toggleItemCompleted,
-	} = useContext(ItemsStoreContext);
-	const [addItemTextboxText, setAddItemTextboxText] = useState('');
-	const addItemTextboxSearchResults: ItemProps[] = useMemo(() => {
-		const searchKey = addItemTextboxText.toLowerCase();
-		if (!searchKey) {
-			return [];
-		}
-		return items.filter(
-			other =>
-				other.id !== item.id &&
-				!item.dependencyIds.includes(other.id) &&
-				(other.name.toLowerCase().includes(searchKey) ||
-					other.description.toLowerCase().includes(searchKey))
-		);
-	}, [addItemTextboxText, item.dependencyIds, item.id, items]);
-	const createItemAsDependency = useCallback(
-		(name: string) => {
-			const dependency = createEmptyItem({ name });
-			addItem(dependency, item.id);
-			setAddItemTextboxText('');
-		},
-		[addItem, item.id]
-	);
+
+	const { getItem, removeItem, removeDependencyFromItem, toggleItemCompleted } =
+		useContext(ItemStoreContext);
+
 	const [, setRootItemId] = useContext(RootItemIdContext);
 	return (
 		<div
@@ -67,41 +33,10 @@ function SubItem({ item }: { item: ItemProps }) {
 					</button>
 				</div>
 			)}
+
 			{item.target != null && <b>{item.target.toLocaleString()}</b>}
 			{item.description && <p style={{ color: 'grey' }}>{item.description}</p>}
-			<div style={{ display: 'flex', flexDirection: 'column' }}>
-				<input
-					value={addItemTextboxText}
-					placeholder='Add something...'
-					onChange={e => setAddItemTextboxText(e.target.value)}
-					type='text'
-				/>
-				{addItemTextboxText.length > 0 && (
-					<button
-						style={{ marginTop: '1rem' }}
-						onClick={() => {
-							createItemAsDependency(addItemTextboxText);
-							setAddItemTextboxText('');
-						}}
-					>
-						Create item with name "{addItemTextboxText}"
-					</button>
-				)}
-				{addItemTextboxSearchResults.map(result => (
-					<div key={result.id}>
-						<h3>{result.name}</h3>
-						<p>{result.description}</p>
-						<button
-							onClick={() => {
-								addDependencyToItem(item.id, result.id);
-								setAddItemTextboxText('');
-							}}
-						>
-							Add as subitem
-						</button>
-					</div>
-				))}
-			</div>
+
 			<div>
 				{item.dependencyIds.map(dependencyId => {
 					const dependency = getItem(dependencyId)!;
