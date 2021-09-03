@@ -6,8 +6,10 @@ import {
 	useState,
 } from 'react';
 import AppContext, { AppContextProps } from './AppContext';
+import { CommandPaletteWrapper } from './CommandPalette';
 import Item from './Item';
 import { ItemProps } from './types';
+import useKeybind from './useKeybind';
 
 const defaultItems: ItemProps[] = [
 	{
@@ -16,6 +18,7 @@ const defaultItems: ItemProps[] = [
 		description: '',
 		target: null,
 		dependencies: [],
+		completedAt: null,
 	},
 ];
 
@@ -34,6 +37,14 @@ function saveItems(items: ItemProps[]) {
 
 function App() {
 	const [items, setItems_internal] = useState(() => loadItems());
+	const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+
+	useKeybind(
+		'c',
+		useCallback(() => {
+			setCommandPaletteOpen(true);
+		}, [])
+	);
 
 	const setItems: Dispatch<SetStateAction<ItemProps[]>> = useCallback(items => {
 		setItems_internal(oldItems => {
@@ -106,6 +117,25 @@ function App() {
 		[getItem, setItems]
 	);
 
+	const toggleItemCompleted = useCallback(
+		(id: string) => {
+			const item = getItem(id);
+			if (item) {
+				setItems(items =>
+					items.map(item =>
+						item.id === id
+							? ({
+									...item,
+									completedAt: item.completedAt ? null : new Date(),
+							  } as ItemProps)
+							: item
+					)
+				);
+			}
+		},
+		[getItem, setItems]
+	);
+
 	const value: AppContextProps = useMemo(
 		() => ({
 			items,
@@ -115,6 +145,9 @@ function App() {
 			removeItem,
 			addDependencyToItem,
 			removeDependencyFromItem,
+			commandPaletteOpen,
+			setCommandPaletteOpen,
+			toggleItemCompleted,
 		}),
 		[
 			items,
@@ -124,11 +157,16 @@ function App() {
 			removeItem,
 			addDependencyToItem,
 			removeDependencyFromItem,
+			commandPaletteOpen,
+			toggleItemCompleted,
 		]
 	);
 
+	const root = useMemo(() => getItem('0'), [getItem]);
+
 	return (
 		<AppContext.Provider value={value}>
+			{commandPaletteOpen && <CommandPaletteWrapper />}
 			<div
 				style={{
 					display: 'flex',
@@ -139,11 +177,9 @@ function App() {
 			>
 				<h1>Planner</h1>
 
-				{/* <ItemAdder /> */}
-
 				<div style={{ display: 'flex', flexDirection: 'column' }}>
-					{items.map(item => (
-						<Item key={item.id} item={item} />
+					{root?.dependencies.map(id => (
+						<Item key={id} item={getItem(id)!} />
 					))}
 				</div>
 			</div>

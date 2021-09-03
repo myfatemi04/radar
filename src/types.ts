@@ -3,5 +3,6 @@ export type ItemProps = {
 	name: string;
 	description: string;
 	target: Date | null;
+	completedAt: Date | null;
 	dependencies: string[];
 };

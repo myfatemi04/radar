@@ -22,6 +22,7 @@ function ItemAdder() {
 			description: '',
 			target: null,
 			dependencies: [],
+			completedAt: null,
 		});
 
 		nameRef.current.value = '';

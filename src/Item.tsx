@@ -10,6 +10,7 @@ function Item({ item }: { item: ItemProps }) {
 		removeItem,
 		addDependencyToItem,
 		removeDependencyFromItem,
+		toggleItemCompleted,
 	} = useContext(AppContext);
 	const [addItemTextboxText, setAddItemTextboxText] = useState('');
 	const addItemTextboxSearchResults: ItemProps[] = useMemo(() => {
@@ -33,6 +34,7 @@ function Item({ item }: { item: ItemProps }) {
 				target: null,
 				description: '',
 				dependencies: [],
+				completedAt: null,
 			};
 			addItem(dependency);
 			addDependencyToItem(item.id, dependency.id);
@@ -64,11 +66,8 @@ function Item({ item }: { item: ItemProps }) {
 			{item.target != null && <b>{item.target.toLocaleString()}</b>}
 			{item.description && <p style={{ color: 'grey' }}>{item.description}</p>}
 			<div>
-				{/* <span style={{ color: 'grey', fontSize: '0.75rem' }}>Subitems</span> */}
-				<br />
 				<input
 					value={addItemTextboxText}
-					style={{ marginBottom: '1rem' }}
 					placeholder='Add something...'
 					onChange={e => setAddItemTextboxText(e.target.value)}
 					type='text'
@@ -100,15 +99,30 @@ function Item({ item }: { item: ItemProps }) {
 				))}
 				{item.dependencies.map(dependencyId => {
 					const dependency = getItem(dependencyId)!;
+					const completed = dependency.completedAt != null;
 					return (
 						<div key={dependencyId}>
-							<h3>{dependency.name}</h3>
-							<p>{dependency.description}</p>
-							<button
-								onClick={() => removeDependencyFromItem(item.id, dependencyId)}
+							<h3
+								style={{
+									textDecoration: completed ? 'line-through' : 'none',
+									color: completed ? 'grey' : 'white',
+									cursor: 'pointer',
+									userSelect: 'none',
+								}}
+								onClick={() => toggleItemCompleted(dependencyId)}
 							>
-								Remove
-							</button>
+								{dependency.name}
+							</h3>
+							<p>{dependency.description}</p>
+							<div>
+								<button
+									onClick={() =>
+										removeDependencyFromItem(item.id, dependencyId)
+									}
+								>
+									Remove
+								</button>
+							</div>
 						</div>
 					);
 				})}
