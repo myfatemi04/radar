@@ -72,7 +72,6 @@ export function getIndirectDependencyCompletionStatus(
 	for (const dependencyId of dependencyIds) {
 		const [dependencyCompleted, dependencyTotal] =
 			getIndirectDependencyCompletionStatus(dependencyId, getItem);
-		console.log(dependencyId, dependencyCompleted, dependencyTotal);
 		completed += dependencyCompleted;
 		total += dependencyTotal;
 	}

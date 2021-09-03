@@ -4,10 +4,11 @@ import ItemStoreContext from './ItemStoreContext';
 import { useIndirectDependencyCompletionStatus } from './ItemUtilities';
 import { ItemProps } from './types';
 
-function SubItem({ item }: { item: ItemProps }) {
+function SubItem({ item, index }: { item: ItemProps; index: number }) {
 	useDebugValue(item);
 
-	const { removeDependencyFromItem } = useContext(ItemStoreContext);
+	const { removeDependencyFromItem, toggleItemCompleted } =
+		useContext(ItemStoreContext);
 
 	const [rootItemId, setRootItemId] = useContext(RootItemIdContext);
 
@@ -23,8 +24,9 @@ function SubItem({ item }: { item: ItemProps }) {
 				alignItems: 'center',
 			}}
 		>
+			<pre>{index}</pre>
 			<h2
-				style={{ cursor: 'pointer', margin: '0' }}
+				style={{ cursor: 'pointer', margin: '0 0.5rem' }}
 				onClick={() => setRootItemId(item.id)}
 			>
 				{item.name}
@@ -40,6 +42,12 @@ function SubItem({ item }: { item: ItemProps }) {
 			<b>
 				{completed} / {total}
 			</b>
+			<button
+				style={{ margin: '0 0.5rem' }}
+				onClick={() => toggleItemCompleted(item.id)}
+			>
+				{item.completedAt === null ? 'Mark complete' : 'Unmark complete'}
+			</button>
 			{item.target != null && <b>{item.target.toLocaleString()}</b>}
 			{item.description && <p style={{ color: 'grey' }}>{item.description}</p>}
 		</div>

@@ -1,24 +1,12 @@
-import { useContext, useState } from 'react';
-import SubItem from './SubItem';
+import { useContext } from 'react';
 import ItemStoreContext from './ItemStoreContext';
-import { ItemProps } from './types';
-import {
-	useItemsSearchResults,
-	useCreateDependencyWithName,
-} from './ItemUtilities';
 import NavigateToPreviousRootItemContext from './NavigateToPreviousRootItemContext';
+import RootItemSearchBar from './RootItemSearchBar';
+import SubItem from './SubItem';
+import { ItemProps } from './types';
 
 export default function RootItem({ item }: { item: ItemProps }) {
-	const { getItem, addDependencyToItem } = useContext(ItemStoreContext);
-
-	const [addItemTextboxText, setAddItemTextboxText] = useState('');
-
-	const addItemTextboxSearchResults = useItemsSearchResults(
-		addItemTextboxText,
-		item
-	);
-
-	const createItemAsDependency = useCreateDependencyWithName(item.id);
+	const { getItem, removeDependencyFromItem } = useContext(ItemStoreContext);
 
 	const back = useContext(NavigateToPreviousRootItemContext);
 
@@ -38,46 +26,17 @@ export default function RootItem({ item }: { item: ItemProps }) {
 				</button>
 			</div>
 
-			<div style={{ display: 'flex', flexDirection: 'column' }}>
-				<input
-					value={addItemTextboxText}
-					placeholder='Add something...'
-					onChange={e => setAddItemTextboxText(e.target.value)}
-					type='text'
-				/>
-				{addItemTextboxText.length > 0 && (
-					<button
-						style={{ marginTop: '1rem' }}
-						onClick={() => {
-							createItemAsDependency(addItemTextboxText);
-							setAddItemTextboxText('');
-						}}
-					>
-						Create item with name "{addItemTextboxText}"
-					</button>
-				)}
-				{addItemTextboxSearchResults.map(result => (
-					<div key={result.id}>
-						<h3>{result.name}</h3>
-						<p>{result.description}</p>
-						<button
-							onClick={() => {
-								addDependencyToItem(item.id, result.id);
-								setAddItemTextboxText('');
-							}}
-						>
-							Add as subitem
-						</button>
-					</div>
-				))}
-			</div>
+			<RootItemSearchBar />
 
 			<div style={{ display: 'flex', flexDirection: 'column' }}>
-				{item.dependencyIds.map(id => {
-					const item = getItem(id);
-					if (item) {
-						return <SubItem key={id} item={item} />;
+				{item.dependencyIds.map((dependencyId, index) => {
+					const dependency = getItem(dependencyId);
+					if (dependency) {
+						return (
+							<SubItem key={dependencyId} item={dependency} index={index} />
+						);
 					} else {
+						removeDependencyFromItem(item.id, dependencyId);
 						return null;
 					}
 				})}
