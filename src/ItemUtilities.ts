@@ -86,6 +86,10 @@ export function getIndirectDependencyCompletionStatus(
 		total += dependencyTotal;
 	}
 
+	if (item.completedAt !== null) {
+		return [total, total];
+	}
+
 	return [completed, total];
 }
 

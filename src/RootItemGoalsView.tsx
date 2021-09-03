@@ -25,6 +25,8 @@ export default function RootItemGoalsView({ item }: { item: ItemProps }) {
 					backgroundRepeat: 'no-repeat',
 					transition: 'background-size 500ms ease',
 					userSelect: 'none',
+					fontFamily: 'monospace',
+					fontSize: '1rem',
 				}}
 			>
 				{((completed / total) * 100).toFixed(0) + '%'}

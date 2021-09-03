@@ -25,47 +25,56 @@ function SubItem({
 	return (
 		<div
 			style={{
+				display: 'flex',
+				flexDirection: 'column',
+				marginTop: '1rem',
 				border: '1px solid white',
 				padding: '0.5rem',
-				marginTop: '1rem',
-				display: 'flex',
-				alignItems: 'center',
 			}}
 		>
-			<pre>{index}</pre>
-			<h2
-				style={{ cursor: 'pointer', margin: '0 0.5rem' }}
-				onClick={() => setRootItemId(item.id)}
+			{path && (
+				<span style={{ fontFamily: 'monospace' }}>
+					{path
+						.slice(0, path.length - 1)
+						.map(id => getItem(id)!.name)
+						.join(' > ')}
+				</span>
+			)}
+			<div
+				style={{
+					display: 'flex',
+					alignItems: 'center',
+				}}
 			>
-				{item.name}
-			</h2>
-			{item.id !== '0' && (
+				<pre>{index}</pre>
+				<h2
+					style={{ cursor: 'pointer', margin: '0 0.5rem' }}
+					onClick={() => setRootItemId(item.id)}
+				>
+					{item.name}
+				</h2>
+				{item.id !== '0' && (
+					<button
+						style={{ margin: '0 0.5rem' }}
+						onClick={() => removeDependencyFromItem(rootItemId, item.id)}
+					>
+						Remove
+					</button>
+				)}
+				<b>
+					{completed} / {total}
+				</b>
 				<button
 					style={{ margin: '0 0.5rem' }}
-					onClick={() => removeDependencyFromItem(rootItemId, item.id)}
+					onClick={() => toggleItemCompleted(item.id)}
 				>
-					Remove
+					{item.completedAt === null ? 'Mark complete' : 'Unmark complete'}
 				</button>
-			)}
-			<b>
-				{completed} / {total}
-			</b>
-			<button
-				style={{ margin: '0 0.5rem' }}
-				onClick={() => toggleItemCompleted(item.id)}
-			>
-				{item.completedAt === null ? 'Mark complete' : 'Unmark complete'}
-			</button>
-			{item.target != null && <b>{item.target.toLocaleString()}</b>}
-			{item.description && <p style={{ color: 'grey' }}>{item.description}</p>}
-			<pre>
-				{path &&
-					path
-						.slice(0, path.length - 1)
-						.reverse()
-						.map(id => getItem(id)!.name)
-						.join(' < ')}
-			</pre>
+				{item.target != null && <b>{item.target.toLocaleString()}</b>}
+				{item.description && (
+					<p style={{ color: 'grey' }}>{item.description}</p>
+				)}
+			</div>
 		</div>
 	);
 }
