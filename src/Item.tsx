@@ -100,18 +100,34 @@ function Item({ item }: { item: ItemProps }) {
 				{item.dependencies.map(dependencyId => {
 					const dependency = getItem(dependencyId)!;
 					const completed = dependency.completedAt != null;
+					const dependencyDependencies = dependency.dependencies.map(
+						dependencyId => getItem(dependencyId)!
+					);
+					const dependencyDependenciesCompleted = dependencyDependencies.reduce(
+						(acc, dependency) => acc + (dependency.completedAt != null ? 1 : 0),
+						0
+					);
+					const dependencyDependenciesTotal = dependencyDependencies.length;
+					const allDependenciesCompleted =
+						dependencyDependenciesCompleted === dependencyDependenciesTotal;
 					return (
 						<div key={dependencyId}>
 							<h3
 								style={{
 									textDecoration: completed ? 'line-through' : 'none',
-									color: completed ? 'grey' : 'white',
+									color: allDependenciesCompleted
+										? '#50ff50'
+										: completed
+										? 'grey'
+										: 'white',
 									cursor: 'pointer',
 									userSelect: 'none',
 								}}
 								onClick={() => toggleItemCompleted(dependencyId)}
 							>
-								{dependency.name}
+								{dependency.name} ({dependencyDependenciesCompleted}
+								{' / '}
+								{dependencyDependenciesTotal})
 							</h3>
 							<p>{dependency.description}</p>
 							<div>
