@@ -1,19 +1,41 @@
-import { useContext, useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 import { CommandPalette } from './CommandPalette';
+import ItemStoreContext from './ItemStoreContext';
+import { findLeaves } from './ItemUtilities';
 import NavigateToPreviousRootItemContext from './NavigateToPreviousRootItemContext';
-import RootItemGoalsView from './RootItemGoalsView';
-import RootItemSubItemsBottomUpView from './RootItemPriorityView';
+import RootItemGoalsView from './RootItemDirectDependenciesList';
+import RootItemSubItemsBottomUpView from './RootItemLeavesList';
 import { ItemProps } from './types';
 
 enum RootItemView {
-	Goals = 'top_down',
-	Priority = 'bottom_up',
+	Goals = 'goals',
+	Priority = 'priority',
 }
 
 export default function RootItem({ item }: { item: ItemProps }) {
-	const [view, setView] = useState<RootItemView>(RootItemView.Goals);
+	const [view, setView] = useState(RootItemView.Goals);
 
 	const back = useContext(NavigateToPreviousRootItemContext);
+
+	const { items } = useContext(ItemStoreContext);
+
+	const leaves = findLeaves(items, item.id);
+
+	const indexToItemId = useCallback(
+		index => {
+			if (view === RootItemView.Goals) {
+				return item.dependencyIds[index] ?? null;
+			} else {
+				const leaf = leaves[index];
+				if (leaf) {
+					return leaf[1].id;
+				} else {
+					return null;
+				}
+			}
+		},
+		[item.dependencyIds, leaves, view]
+	);
 
 	return (
 		<div
@@ -26,7 +48,7 @@ export default function RootItem({ item }: { item: ItemProps }) {
 		>
 			<h1>{item.name}</h1>
 
-			<CommandPalette />
+			<CommandPalette itemIndexToItemId={indexToItemId} />
 
 			<div style={{ display: 'flex', marginTop: '1rem' }}>
 				<button
@@ -61,7 +83,7 @@ export default function RootItem({ item }: { item: ItemProps }) {
 			{view === RootItemView.Goals ? (
 				<RootItemGoalsView item={item} />
 			) : (
-				<RootItemSubItemsBottomUpView item={item} />
+				<RootItemSubItemsBottomUpView leaves={leaves} />
 			)}
 		</div>
 	);

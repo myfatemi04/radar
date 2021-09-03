@@ -6,7 +6,11 @@ import ItemStoreContext from './ItemStoreContext';
 import NavigateToPreviousRootItemContext from './NavigateToPreviousRootItemContext';
 import useKeybind from './useKeybind';
 
-export function CommandPalette() {
+export function CommandPalette({
+	itemIndexToItemId,
+}: {
+	itemIndexToItemId: (index: number) => string | null;
+}) {
 	const [command, setCommand] = useState('');
 	const [rootItemId, setRootItemId] = useContext(RootItemIdContext);
 	const ref = useRef<HTMLInputElement>(null);
@@ -32,8 +36,6 @@ export function CommandPalette() {
 		const [commandName, ...args] = command.split(' ');
 		console.log(commandName, args);
 
-		const rootItem = I.getItem(rootItemId);
-
 		switch (commandName.toLowerCase()) {
 			case '/t': {
 				const name = args.join(' ');
@@ -55,12 +57,10 @@ export function CommandPalette() {
 					const rest = commandName.slice(1);
 					const natural = isNaturalNumber(rest);
 					if (natural) {
-						const dependencyIndexToNavigateTo = +rest;
+						const dependencyIndex = +rest;
+						const dependencyId = itemIndexToItemId(dependencyIndex);
 
-						const dependencyId =
-							rootItem!.dependencyIds[dependencyIndexToNavigateTo];
-
-						if (dependencyId !== undefined) {
+						if (dependencyId !== null) {
 							console.log('Dependencies:', +rest, dependencyId);
 							setRootItemId(dependencyId);
 							done();
@@ -71,7 +71,7 @@ export function CommandPalette() {
 				}
 			}
 		}
-	}, [I, back, command, done, rootItemId, setRootItemId]);
+	}, [I, back, command, done, itemIndexToItemId, rootItemId, setRootItemId]);
 
 	useKeybind('Enter', onEnteredCommand);
 
@@ -99,7 +99,11 @@ export function CommandPalette() {
 /**
  * Renders the command palette in the absolute center of the body.
  */
-export function CommandPaletteWrapper() {
+export function CommandPaletteWrapper({
+	itemIndexToItemId,
+}: {
+	itemIndexToItemId: (index: number) => string | null;
+}) {
 	return (
 		<div
 			style={{
@@ -111,7 +115,7 @@ export function CommandPaletteWrapper() {
 				width: 'min(80vw, 40rem)',
 			}}
 		>
-			<CommandPalette />
+			<CommandPalette itemIndexToItemId={itemIndexToItemId} />
 		</div>
 	);
 }
