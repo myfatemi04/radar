@@ -7,30 +7,19 @@ export enum KeybindType {
 
 export default function useKeybind(
 	key: string,
-	callback: () => void,
+	callback: (event: KeyboardEvent) => void,
 	type: KeybindType = KeybindType.DOWN
 ) {
 	useEffect(() => {
-		if (type === KeybindType.DOWN) {
-			const handleKeyDown = (event: KeyboardEvent) => {
-				if (event.key === key) {
-					callback();
-				}
-			};
-			window.addEventListener('keydown', handleKeyDown);
-			return () => {
-				window.removeEventListener('keydown', handleKeyDown);
-			};
-		} else if (type === KeybindType.UP) {
-			const handleKeyUp = (event: KeyboardEvent) => {
-				if (event.key === key) {
-					callback();
-				}
-			};
-			window.addEventListener('keyup', handleKeyUp);
-			return () => {
-				window.removeEventListener('keyup', handleKeyUp);
-			};
-		}
+		const listener = (event: KeyboardEvent) => {
+			if (event.key === key) {
+				callback(event);
+			}
+		};
+		const eventType = type === KeybindType.DOWN ? 'keydown' : 'keyup';
+		window.addEventListener(eventType, listener);
+		return () => {
+			window.removeEventListener(eventType, listener);
+		};
 	}, [callback, key, type]);
 }

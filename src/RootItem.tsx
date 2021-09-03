@@ -1,8 +1,8 @@
 import { useContext, useState } from 'react';
+import { CommandPalette } from './CommandPalette';
 import NavigateToPreviousRootItemContext from './NavigateToPreviousRootItemContext';
-import RootItemSearchBar from './RootItemSearchBar';
-import RootItemSubItemsBottomUpView from './RootItemPriorityView';
 import RootItemGoalsView from './RootItemGoalsView';
+import RootItemSubItemsBottomUpView from './RootItemPriorityView';
 import { ItemProps } from './types';
 
 enum RootItemView {
@@ -25,15 +25,20 @@ export default function RootItem({ item }: { item: ItemProps }) {
 			}}
 		>
 			<h1>{item.name}</h1>
-			<div style={{ marginBottom: '1rem' }}>
-				<button style={{ padding: '0.5rem 1rem' }} onClick={back}>
-					Back
-				</button>
-			</div>
 
-			<RootItemSearchBar />
+			<CommandPalette />
 
 			<div style={{ display: 'flex', marginTop: '1rem' }}>
+				<button
+					style={{
+						padding: '0.5rem 1rem',
+						marginRight: '1rem',
+					}}
+					onClick={back}
+				>
+					Back
+				</button>
+
 				<button
 					style={{
 						padding: '0.5rem 1rem',

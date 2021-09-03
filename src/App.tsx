@@ -1,23 +1,11 @@
-import { Dispatch } from 'react';
-import { SetStateAction } from 'react';
-import { useCallback, useRef, useState } from 'react';
-import { CommandPaletteContext, RootItemIdContext } from './AppContexts';
-import { CommandPaletteWrapper } from './CommandPalette';
+import { Dispatch, SetStateAction, useCallback, useRef, useState } from 'react';
+import { RootItemIdContext } from './AppContexts';
 import NavigateToPreviousRootItemContext from './NavigateToPreviousRootItemContext';
 import RootItemRenderer from './RootItemRenderer';
-import useKeybind from './useKeybind';
 
 function App() {
-	const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
 	const itemNavigationStackRef = useRef<string[]>(['0']);
 	const [rootItemId, setRootItemId_internal] = useState('0');
-
-	useKeybind(
-		'/',
-		useCallback(() => {
-			setCommandPaletteOpen(true);
-		}, [])
-	);
 
 	const navigateToPreviousRootItem = useCallback(() => {
 		const itemNavigationStack = itemNavigationStackRef.current;
@@ -49,14 +37,9 @@ function App() {
 		<NavigateToPreviousRootItemContext.Provider
 			value={navigateToPreviousRootItem}
 		>
-			<CommandPaletteContext.Provider
-				value={[commandPaletteOpen, setCommandPaletteOpen]}
-			>
-				<RootItemIdContext.Provider value={[rootItemId, setRootItemId]}>
-					{commandPaletteOpen && <CommandPaletteWrapper />}
-					<RootItemRenderer id={rootItemId} />
-				</RootItemIdContext.Provider>
-			</CommandPaletteContext.Provider>
+			<RootItemIdContext.Provider value={[rootItemId, setRootItemId]}>
+				<RootItemRenderer id={rootItemId} />
+			</RootItemIdContext.Provider>
 		</NavigateToPreviousRootItemContext.Provider>
 	);
 }

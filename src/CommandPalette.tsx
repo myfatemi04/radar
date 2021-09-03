@@ -1,5 +1,5 @@
-import { useCallback, useContext, useState } from 'react';
-import { CommandPaletteContext, RootItemIdContext } from './AppContexts';
+import { useCallback, useContext, useRef, useState } from 'react';
+import { RootItemIdContext } from './AppContexts';
 import createEmptyItem from './createEmptyItem';
 import isNaturalNumber from './isDigit';
 import ItemStoreContext from './ItemStoreContext';
@@ -7,21 +7,26 @@ import NavigateToPreviousRootItemContext from './NavigateToPreviousRootItemConte
 import useKeybind from './useKeybind';
 
 export function CommandPalette() {
-	const [, setCommandPaletteOpen] = useContext(CommandPaletteContext);
 	const [command, setCommand] = useState('');
 	const [rootItemId, setRootItemId] = useContext(RootItemIdContext);
+	const ref = useRef<HTMLInputElement>(null);
 	const I = useContext(ItemStoreContext);
 
-	useKeybind(
-		'Escape',
-		useCallback(() => setCommandPaletteOpen(false), [setCommandPaletteOpen])
-	);
+	const done = useCallback(() => {
+		setCommand('');
+	}, []);
+
+	const typeCallback = useCallback(() => {
+		ref.current?.focus();
+	}, []);
+
+	useKeybind('Enter', typeCallback);
+	useKeybind('/', typeCallback);
 
 	const back = useContext(NavigateToPreviousRootItemContext);
 
 	const onEnteredCommand = useCallback(() => {
 		if (command === '' || command === '/') {
-			setCommandPaletteOpen(false);
 			return;
 		}
 		const [commandName, ...args] = command.split(' ');
@@ -36,13 +41,13 @@ export function CommandPalette() {
 					return;
 				}
 				I.addItem(createEmptyItem({ name }), rootItemId);
-				setCommandPaletteOpen(false);
+				done();
 				break;
 			}
 			case '/b': {
 				back();
+				done();
 
-				setCommandPaletteOpen(false);
 				break;
 			}
 			default: {
@@ -58,21 +63,22 @@ export function CommandPalette() {
 						if (dependencyId !== undefined) {
 							console.log('Dependencies:', +rest, dependencyId);
 							setRootItemId(dependencyId);
-							setCommandPaletteOpen(false);
+							done();
+
 							break;
 						}
 					}
 				}
 			}
 		}
-	}, [I, back, command, rootItemId, setCommandPaletteOpen, setRootItemId]);
+	}, [I, back, command, done, rootItemId, setRootItemId]);
 
 	useKeybind('Enter', onEnteredCommand);
 
 	return (
 		<div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
 			<input
-				ref={input => input?.focus()}
+				ref={ref}
 				type='text'
 				value={command}
 				onChange={e => setCommand(e.target.value)}
@@ -84,7 +90,6 @@ export function CommandPalette() {
 					fontSize: '2em',
 					fontFamily: 'monospace',
 					backgroundColor: '#202020',
-					borderRadius: '0.5em',
 				}}
 			/>
 		</div>

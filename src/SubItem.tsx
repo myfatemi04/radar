@@ -22,6 +22,8 @@ function SubItem({
 
 	const [completed, total] = useIndirectDependencyCompletionStatus(item.id);
 
+	const hasDependencies = item.dependencyIds.length > 0;
+
 	return (
 		<div
 			style={{
@@ -53,6 +55,22 @@ function SubItem({
 				>
 					{item.name}
 				</h2>
+				{hasDependencies ? (
+					<span style={{ fontFamily: 'monospace', fontWeight: 'bold' }}>
+						{completed} / {total}
+					</span>
+				) : (
+					<button
+						style={{ margin: '0 0.5rem' }}
+						onClick={() => toggleItemCompleted(item.id)}
+					>
+						{item.completedAt === null ? 'Mark complete' : 'Unmark complete'}
+					</button>
+				)}
+				{item.target != null && <b>{item.target.toLocaleString()}</b>}
+				{item.description && (
+					<p style={{ color: 'grey' }}>{item.description}</p>
+				)}
 				{item.id !== '0' && (
 					<button
 						style={{ margin: '0 0.5rem' }}
@@ -60,19 +78,6 @@ function SubItem({
 					>
 						Remove
 					</button>
-				)}
-				<b>
-					{completed} / {total}
-				</b>
-				<button
-					style={{ margin: '0 0.5rem' }}
-					onClick={() => toggleItemCompleted(item.id)}
-				>
-					{item.completedAt === null ? 'Mark complete' : 'Unmark complete'}
-				</button>
-				{item.target != null && <b>{item.target.toLocaleString()}</b>}
-				{item.description && (
-					<p style={{ color: 'grey' }}>{item.description}</p>
 				)}
 			</div>
 		</div>
