@@ -1,15 +1,13 @@
 import { useCallback, useContext } from 'react';
-import AppContext from './AppContext';
+import CommandPaletteContext from './CommandPaletteContext';
 import useKeybind from './useKeybind';
 
 export function CommandPalette() {
-	const { setCommandPaletteOpen } = useContext(AppContext);
+	const [, setCommandPaletteOpen] = useContext(CommandPaletteContext);
 
 	useKeybind(
 		'Escape',
-		useCallback(() => {
-			setCommandPaletteOpen(false);
-		}, [setCommandPaletteOpen])
+		useCallback(() => setCommandPaletteOpen(false), [setCommandPaletteOpen])
 	);
 
 	return (

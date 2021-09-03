@@ -1,7 +1,7 @@
 import { createContext, Dispatch, SetStateAction } from 'react';
 import { ItemProps } from './types';
 
-export type AppContextProps = {
+export type ItemsStoreContextProps = {
 	items: ItemProps[];
 	setItems: Dispatch<SetStateAction<ItemProps[]>>;
 	removeItem: (id: string) => void;
@@ -9,12 +9,10 @@ export type AppContextProps = {
 	getItem: (id: string) => ItemProps | undefined;
 	addDependencyToItem: (id: string, dependency: string) => void;
 	removeDependencyFromItem: (id: string, dependency: string) => void;
-	commandPaletteOpen: boolean;
-	setCommandPaletteOpen: Dispatch<SetStateAction<boolean>>;
 	toggleItemCompleted: (id: string) => void;
 };
 
-const AppContext = createContext<AppContextProps>({
+const ItemsStoreContext = createContext<ItemsStoreContextProps>({
 	items: [],
 	setItems: (() => {}) as Dispatch<SetStateAction<ItemProps[]>>,
 	removeItem(id: string) {
@@ -33,11 +31,9 @@ const AppContext = createContext<AppContextProps>({
 	removeDependencyFromItem(id: string, dependency: string) {
 		console.log('removeDependencyFromItem', id, dependency);
 	},
-	commandPaletteOpen: false,
-	setCommandPaletteOpen: (() => {}) as Dispatch<SetStateAction<boolean>>,
 	toggleItemCompleted(id: string) {
 		console.log('toggleItemCompleted', id);
 	},
 });
 
-export default AppContext;
+export default ItemsStoreContext;

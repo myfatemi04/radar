@@ -1,5 +1,5 @@
 import { useCallback, useContext, useMemo, useState } from 'react';
-import AppContext from './AppContext';
+import ItemsStoreContext from './ItemsStoreContext';
 import { ItemProps } from './types';
 
 function Item({ item }: { item: ItemProps }) {
@@ -11,7 +11,7 @@ function Item({ item }: { item: ItemProps }) {
 		addDependencyToItem,
 		removeDependencyFromItem,
 		toggleItemCompleted,
-	} = useContext(AppContext);
+	} = useContext(ItemsStoreContext);
 	const [addItemTextboxText, setAddItemTextboxText] = useState('');
 	const addItemTextboxSearchResults: ItemProps[] = useMemo(() => {
 		const searchKey = addItemTextboxText.toLowerCase();

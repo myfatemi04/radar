@@ -1,8 +1,8 @@
 import { useCallback, useContext, useRef } from 'react';
-import AppContext from './AppContext';
+import ItemsStoreContext from './ItemsStoreContext';
 
 function ItemAdder() {
-	const { addItem } = useContext(AppContext);
+	const { addItem } = useContext(ItemsStoreContext);
 
 	const nameRef = useRef<HTMLInputElement>(null);
 
