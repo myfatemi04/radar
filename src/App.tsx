@@ -1,14 +1,12 @@
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useState } from 'react';
+import { CommandPaletteContext, RootItemIdContext } from './AppContexts';
 import { CommandPaletteWrapper } from './CommandPalette';
-import CommandPaletteContext from './CommandPaletteContext';
-import Item from './Item';
-import ItemsStoreContext from './ItemsStoreContext';
-import useItem from './useItem';
+import RootItemRenderer from './RootItemRenderer';
 import useKeybind from './useKeybind';
 
 function App() {
 	const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
-	const { getItem } = useContext(ItemsStoreContext);
+	const [rootItemId, setRootItemId] = useState('0');
 
 	useKeybind(
 		'/',
@@ -17,34 +15,14 @@ function App() {
 		}, [])
 	);
 
-	const root = useItem('0');
-
 	return (
 		<CommandPaletteContext.Provider
 			value={[commandPaletteOpen, setCommandPaletteOpen]}
 		>
-			{commandPaletteOpen && <CommandPaletteWrapper />}
-			<div
-				style={{
-					display: 'flex',
-					flexDirection: 'column',
-					width: 'calc(min(30rem, 50vw))',
-					margin: '1rem auto',
-				}}
-			>
-				<h1>Planner</h1>
-
-				<div style={{ display: 'flex', flexDirection: 'column' }}>
-					{root?.dependencyIds.map(id => {
-						const item = getItem(id);
-						if (item) {
-							return <Item key={id} item={item} />;
-						} else {
-							return null;
-						}
-					})}
-				</div>
-			</div>
+			<RootItemIdContext.Provider value={[rootItemId, setRootItemId]}>
+				{commandPaletteOpen && <CommandPaletteWrapper />}
+				<RootItemRenderer id={rootItemId} />
+			</RootItemIdContext.Provider>
 		</CommandPaletteContext.Provider>
 	);
 }

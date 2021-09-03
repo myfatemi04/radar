@@ -1,4 +1,4 @@
-import { FC, useCallback, useMemo, useState } from 'react';
+import { FC, useCallback, useEffect, useMemo, useState } from 'react';
 import ItemsStoreContext, { ItemsStoreContextProps } from './ItemsStoreContext';
 import { ItemProps } from './types';
 
@@ -29,6 +29,10 @@ function saveItems(items: ItemProps[]) {
 
 const ItemsStoreProvider: FC = ({ children }) => {
 	const [items, setItems_internal] = useState(() => loadItems());
+
+	useEffect(() => {
+		console.table(items);
+	}, [items]);
 
 	const setItems: typeof setItems_internal = useCallback(items => {
 		setItems_internal(oldItems => {
@@ -101,6 +105,15 @@ const ItemsStoreProvider: FC = ({ children }) => {
 	const removeDependencyFromItem = useCallback(
 		(id: string, dependencyId: string) => {
 			const item = getItem(id);
+			const dependency = getItem(dependencyId);
+			if (item && dependency) {
+				if (
+					dependency.dependencyForIds.length === 1 &&
+					dependency.dependencyForIds[0] === item.id
+				) {
+					removeItem(dependencyId);
+				}
+			}
 			if (item) {
 				setItems(items =>
 					items.map(item =>
@@ -116,7 +129,7 @@ const ItemsStoreProvider: FC = ({ children }) => {
 				);
 			}
 		},
-		[getItem, setItems]
+		[getItem, removeItem, setItems]
 	);
 
 	const toggleItemCompleted = useCallback(

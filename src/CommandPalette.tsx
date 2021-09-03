@@ -1,5 +1,5 @@
 import { useCallback, useContext, useState } from 'react';
-import CommandPaletteContext from './CommandPaletteContext';
+import { CommandPaletteContext } from './AppContexts';
 import createEmptyItem from './createEmptyItem';
 import ItemsStoreContext from './ItemsStoreContext';
 import useKeybind from './useKeybind';
