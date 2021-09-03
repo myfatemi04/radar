@@ -5,7 +5,7 @@ export type ItemsStoreContextProps = {
 	items: ItemProps[];
 	setItems: Dispatch<SetStateAction<ItemProps[]>>;
 	removeItem: (id: string) => void;
-	addItem: (item: ItemProps) => void;
+	addItem: (item: ItemProps, parentId: string) => void;
 	getItem: (id: string) => ItemProps | undefined;
 	addDependencyToItem: (id: string, dependency: string) => void;
 	removeDependencyFromItem: (id: string, dependency: string) => void;
@@ -18,8 +18,8 @@ const ItemsStoreContext = createContext<ItemsStoreContextProps>({
 	removeItem(id: string) {
 		console.log('removeItem', id);
 	},
-	addItem(item: ItemProps) {
-		console.log('addItem', item);
+	addItem(item: ItemProps, parentId: string) {
+		console.log('addItem', item, parentId);
 	},
 	getItem(id: string): ItemProps | undefined {
 		console.log('getItem', id);

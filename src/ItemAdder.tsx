@@ -1,4 +1,5 @@
 import { useCallback, useContext, useRef } from 'react';
+import createEmptyItem from './createEmptyItem';
 import ItemsStoreContext from './ItemsStoreContext';
 
 function ItemAdder() {
@@ -16,14 +17,7 @@ function ItemAdder() {
 			return;
 		}
 
-		addItem({
-			id: Math.random().toString(36).substr(2, 9),
-			name,
-			description: '',
-			target: null,
-			dependencies: [],
-			completedAt: null,
-		});
+		addItem(createEmptyItem({ name }), '0');
 
 		nameRef.current.value = '';
 	}, [addItem]);

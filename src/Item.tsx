@@ -5,6 +5,7 @@ import {
 	useMemo,
 	useState,
 } from 'react';
+import createEmptyItem from './createEmptyItem';
 import ItemsStoreContext from './ItemsStoreContext';
 import { ItemProps } from './types';
 
@@ -28,26 +29,18 @@ function Item({ item }: { item: ItemProps }) {
 		return items.filter(
 			other =>
 				other.id !== item.id &&
-				!item.dependencies.includes(other.id) &&
+				!item.dependencyIds.includes(other.id) &&
 				(other.name.toLowerCase().includes(searchKey) ||
 					other.description.toLowerCase().includes(searchKey))
 		);
-	}, [addItemTextboxText, item.dependencies, item.id, items]);
+	}, [addItemTextboxText, item.dependencyIds, item.id, items]);
 	const createItemAsDependency = useCallback(
 		(name: string) => {
-			const dependency: ItemProps = {
-				id: Math.random().toString(36).substr(2, 9),
-				name,
-				target: null,
-				description: '',
-				dependencies: [],
-				completedAt: null,
-			};
-			addItem(dependency);
-			addDependencyToItem(item.id, dependency.id);
+			const dependency = createEmptyItem({ name });
+			addItem(dependency, item.id);
 			setAddItemTextboxText('');
 		},
-		[addDependencyToItem, addItem, item.id]
+		[addItem, item.id]
 	);
 	return (
 		<div
@@ -72,7 +65,7 @@ function Item({ item }: { item: ItemProps }) {
 			)}
 			{item.target != null && <b>{item.target.toLocaleString()}</b>}
 			{item.description && <p style={{ color: 'grey' }}>{item.description}</p>}
-			<div>
+			<div style={{ display: 'flex', flexDirection: 'column' }}>
 				<input
 					value={addItemTextboxText}
 					placeholder='Add something...'
@@ -81,7 +74,7 @@ function Item({ item }: { item: ItemProps }) {
 				/>
 				{addItemTextboxText.length > 0 && (
 					<button
-						style={{ marginLeft: '1rem' }}
+						style={{ marginTop: '1rem' }}
 						onClick={() => {
 							createItemAsDependency(addItemTextboxText);
 							setAddItemTextboxText('');
@@ -104,10 +97,12 @@ function Item({ item }: { item: ItemProps }) {
 						</button>
 					</div>
 				))}
-				{item.dependencies.map(dependencyId => {
+			</div>
+			<div>
+				{item.dependencyIds.map(dependencyId => {
 					const dependency = getItem(dependencyId)!;
 					const completed = dependency.completedAt != null;
-					const dependencyDependencies = dependency.dependencies.map(
+					const dependencyDependencies = dependency.dependencyIds.map(
 						dependencyId => getItem(dependencyId)!
 					);
 					const dependencyDependenciesCompleted = dependencyDependencies.reduce(
@@ -117,24 +112,28 @@ function Item({ item }: { item: ItemProps }) {
 					const dependencyDependenciesTotal = dependencyDependencies.length;
 					const allDependenciesCompleted =
 						dependencyDependenciesCompleted === dependencyDependenciesTotal;
+					const hasDependencies = dependencyDependencies.length > 0;
+					const color = hasDependencies
+						? allDependenciesCompleted
+							? '#50ff50'
+							: 'white'
+						: completed
+						? 'grey'
+						: 'white';
 					return (
 						<div key={dependencyId}>
 							<h3
 								style={{
 									textDecoration: completed ? 'line-through' : 'none',
-									color: allDependenciesCompleted
-										? '#50ff50'
-										: completed
-										? 'grey'
-										: 'white',
+									color,
 									cursor: 'pointer',
 									userSelect: 'none',
 								}}
 								onClick={() => toggleItemCompleted(dependencyId)}
 							>
-								{dependency.name} ({dependencyDependenciesCompleted}
-								{' / '}
-								{dependencyDependenciesTotal})
+								{dependency.name}{' '}
+								{hasDependencies &&
+									`${dependencyDependenciesCompleted} / ${dependencyDependenciesTotal}`}
 							</h3>
 							<p>{dependency.description}</p>
 							<div>

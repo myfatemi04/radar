@@ -8,7 +8,8 @@ const defaultItems: ItemProps[] = [
 		name: 'Goals',
 		description: '',
 		target: null,
-		dependencies: [],
+		dependencyIds: [],
+		dependencyForIds: [],
 		completedAt: null,
 	},
 ];
@@ -43,8 +44,23 @@ const ItemsStoreProvider: FC = ({ children }) => {
 	);
 
 	const addItem = useCallback(
-		(item: ItemProps) => {
-			setItems(items => [...items, item]);
+		(itemWithoutParent: ItemProps, parentId: string) => {
+			setItems(items => {
+				const item = { ...itemWithoutParent, dependencyForIds: [parentId] };
+				const itemId = itemWithoutParent.id;
+				const withNewItem = [...items, item];
+				const withNewItemAndDependency = withNewItem.map(item => {
+					if (item.id === parentId) {
+						return {
+							...item,
+							dependencyIds: [...item.dependencyIds, itemId],
+						};
+					} else {
+						return item;
+					}
+				});
+				return withNewItemAndDependency;
+			});
 		},
 		[setItems]
 	);
@@ -55,7 +71,7 @@ const ItemsStoreProvider: FC = ({ children }) => {
 				items = items.filter(item => item.id !== id);
 				items = items.map(item => ({
 					...item,
-					dependencies: item.dependencies.filter(dep => dep !== id),
+					dependencies: item.dependencyIds.filter(dep => dep !== id),
 				}));
 				return items;
 			});
@@ -70,7 +86,10 @@ const ItemsStoreProvider: FC = ({ children }) => {
 				setItems(items =>
 					items.map(item =>
 						item.id === id
-							? { ...item, dependencies: [...item.dependencies, dependencyId] }
+							? {
+									...item,
+									dependencyIds: [...item.dependencyIds, dependencyId],
+							  }
 							: item
 					)
 				);
@@ -88,7 +107,7 @@ const ItemsStoreProvider: FC = ({ children }) => {
 						item.id === id
 							? {
 									...item,
-									dependencies: item.dependencies.filter(
+									dependencyIds: item.dependencyIds.filter(
 										dep => dep !== dependencyId
 									),
 							  }

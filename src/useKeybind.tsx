@@ -1,25 +1,36 @@
 import { useEffect } from 'react';
 
-export default function useKeybind(key: string, callback: () => void) {
+export enum KeybindType {
+	DOWN = 'down',
+	UP = 'up',
+}
+
+export default function useKeybind(
+	key: string,
+	callback: () => void,
+	type: KeybindType = KeybindType.DOWN
+) {
 	useEffect(() => {
-		const handleKeyDown = (event: KeyboardEvent) => {
-			// if (event.key === key) {
-			// 	callback();
-			// }
-		};
-
-		const handleKeyUp = (event: KeyboardEvent) => {
-			if (event.key === key) {
-				callback();
-			}
-		};
-
-		window.addEventListener('keydown', handleKeyDown);
-		window.addEventListener('keyup', handleKeyUp);
-
-		return () => {
-			window.removeEventListener('keydown', handleKeyDown);
-			window.removeEventListener('keyup', handleKeyUp);
-		};
-	}, [callback, key]);
+		if (type === KeybindType.DOWN) {
+			const handleKeyDown = (event: KeyboardEvent) => {
+				if (event.key === key) {
+					callback();
+				}
+			};
+			window.addEventListener('keydown', handleKeyDown);
+			return () => {
+				window.removeEventListener('keydown', handleKeyDown);
+			};
+		} else if (type === KeybindType.UP) {
+			const handleKeyUp = (event: KeyboardEvent) => {
+				if (event.key === key) {
+					callback();
+				}
+			};
+			window.addEventListener('keyup', handleKeyUp);
+			return () => {
+				window.removeEventListener('keyup', handleKeyUp);
+			};
+		}
+	}, [callback, key, type]);
 }

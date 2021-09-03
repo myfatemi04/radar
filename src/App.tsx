@@ -11,7 +11,7 @@ function App() {
 	const { getItem } = useContext(ItemsStoreContext);
 
 	useKeybind(
-		'c',
+		'/',
 		useCallback(() => {
 			setCommandPaletteOpen(true);
 		}, [])
@@ -35,9 +35,14 @@ function App() {
 				<h1>Planner</h1>
 
 				<div style={{ display: 'flex', flexDirection: 'column' }}>
-					{root?.dependencies.map(id => (
-						<Item key={id} item={getItem(id)!} />
-					))}
+					{root?.dependencyIds.map(id => {
+						const item = getItem(id);
+						if (item) {
+							return <Item key={id} item={item} />;
+						} else {
+							return null;
+						}
+					})}
 				</div>
 			</div>
 		</CommandPaletteContext.Provider>
