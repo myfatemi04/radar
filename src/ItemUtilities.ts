@@ -58,7 +58,7 @@ export function getIndirectDependencyCompletionStatus(
 		return [0, 0];
 	}
 	const { dependencyIds } = item;
-	if (!dependencyIds) {
+	if (dependencyIds.length === 0) {
 		if (item.completedAt === null) {
 			return [0, 1];
 		} else {
@@ -72,6 +72,7 @@ export function getIndirectDependencyCompletionStatus(
 	for (const dependencyId of dependencyIds) {
 		const [dependencyCompleted, dependencyTotal] =
 			getIndirectDependencyCompletionStatus(dependencyId, getItem);
+		console.log(dependencyId, dependencyCompleted, dependencyTotal);
 		completed += dependencyCompleted;
 		total += dependencyTotal;
 	}

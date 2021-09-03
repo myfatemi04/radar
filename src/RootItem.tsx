@@ -6,6 +6,7 @@ import {
 	useItemsSearchResults,
 	useCreateDependencyWithName,
 } from './ItemUtilities';
+import NavigateToPreviousRootItemContext from './NavigateToPreviousRootItemContext';
 
 export default function RootItem({ item }: { item: ItemProps }) {
 	const { getItem, addDependencyToItem } = useContext(ItemStoreContext);
@@ -19,16 +20,23 @@ export default function RootItem({ item }: { item: ItemProps }) {
 
 	const createItemAsDependency = useCreateDependencyWithName(item.id);
 
+	const back = useContext(NavigateToPreviousRootItemContext);
+
 	return (
 		<div
 			style={{
 				display: 'flex',
 				flexDirection: 'column',
-				width: 'calc(min(30rem, 50vw))',
-				margin: '1rem auto',
+				width: '100%',
+				padding: '1rem',
 			}}
 		>
 			<h1>{item.name}</h1>
+			<div style={{ marginBottom: '1rem' }}>
+				<button style={{ padding: '0.5rem 1rem' }} onClick={back}>
+					Back
+				</button>
+			</div>
 
 			<div style={{ display: 'flex', flexDirection: 'column' }}>
 				<input
