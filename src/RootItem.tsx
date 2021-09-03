@@ -1,12 +1,17 @@
-import { useContext } from 'react';
-import ItemStoreContext from './ItemStoreContext';
+import { useContext, useState } from 'react';
 import NavigateToPreviousRootItemContext from './NavigateToPreviousRootItemContext';
 import RootItemSearchBar from './RootItemSearchBar';
-import SubItem from './SubItem';
+import RootItemSubItemsBottomUpView from './RootItemPriorityView';
+import RootItemGoalsView from './RootItemGoalsView';
 import { ItemProps } from './types';
 
+enum RootItemView {
+	Goals = 'top_down',
+	Priority = 'bottom_up',
+}
+
 export default function RootItem({ item }: { item: ItemProps }) {
-	const { getItem, removeDependencyFromItem } = useContext(ItemStoreContext);
+	const [view, setView] = useState<RootItemView>(RootItemView.Goals);
 
 	const back = useContext(NavigateToPreviousRootItemContext);
 
@@ -28,19 +33,31 @@ export default function RootItem({ item }: { item: ItemProps }) {
 
 			<RootItemSearchBar />
 
-			<div style={{ display: 'flex', flexDirection: 'column' }}>
-				{item.dependencyIds.map((dependencyId, index) => {
-					const dependency = getItem(dependencyId);
-					if (dependency) {
-						return (
-							<SubItem key={dependencyId} item={dependency} index={index} />
-						);
-					} else {
-						removeDependencyFromItem(item.id, dependencyId);
-						return null;
-					}
-				})}
+			<div style={{ display: 'flex', marginTop: '1rem' }}>
+				<button
+					style={{
+						padding: '0.5rem 1rem',
+						marginRight: '1rem',
+					}}
+					onClick={() => setView(RootItemView.Goals)}
+				>
+					Goals
+				</button>
+				<button
+					style={{
+						padding: '0.5rem 1rem',
+					}}
+					onClick={() => setView(RootItemView.Priority)}
+				>
+					Priority
+				</button>
 			</div>
+
+			{view === RootItemView.Goals ? (
+				<RootItemGoalsView item={item} />
+			) : (
+				<RootItemSubItemsBottomUpView item={item} />
+			)}
 		</div>
 	);
 }

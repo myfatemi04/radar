@@ -49,6 +49,16 @@ export function useItemsSearchResults(text: string, root: ItemProps) {
 	}, [text, items, root.id, getItem]);
 }
 
+export function useIndirectDependencyCompletionStatus(
+	id: string
+): [number, number] {
+	const { getItem } = useContext(ItemStoreContext);
+
+	return useMemo(() => {
+		return getIndirectDependencyCompletionStatus(id, getItem);
+	}, [getItem, id]);
+}
+
 export function getIndirectDependencyCompletionStatus(
 	id: string,
 	getItem: (id: string) => ItemProps | undefined
@@ -103,12 +113,67 @@ export function isDescendant(
 	);
 }
 
-export function useIndirectDependencyCompletionStatus(
-	id: string
-): [number, number] {
-	const { getItem } = useContext(ItemStoreContext);
+export function findLeaves(
+	items: ItemProps[],
+	rootId: string
+): [string[], ItemProps][] {
+	const visited = new Set<string>();
+	const queue: [string[], string][] = [[[], rootId]];
+	const results: [string[], ItemProps][] = [];
+	while (queue.length > 0) {
+		const [prev, nodeId] = queue.shift()!;
+		if (visited.has(nodeId)) {
+			continue;
+		}
 
-	return useMemo(() => {
-		return getIndirectDependencyCompletionStatus(id, getItem);
-	}, [getItem, id]);
+		const node = items.find(item => item.id === nodeId);
+		if (!node) {
+			continue;
+		}
+
+		if (node.dependencyIds.length === 0) {
+			results.push([[...prev, nodeId], node]);
+		}
+
+		for (const dependencyId of node.dependencyIds) {
+			queue.push([[...prev, nodeId], dependencyId]);
+		}
+	}
+
+	return results;
+}
+
+export function findPath(
+	sourceItemId: string,
+	destinationItemId: string,
+	getItem: (id: string) => ItemProps | undefined,
+	visited: Set<string> = new Set([sourceItemId])
+): string[] | null {
+	const sourceItem = getItem(sourceItemId);
+	if (!sourceItem) {
+		return null;
+	}
+
+	if (sourceItemId === destinationItemId) {
+		return [sourceItemId];
+	}
+
+	const dependencyIds = sourceItem.dependencyIds;
+	if (dependencyIds.length === 0) {
+		return null;
+	}
+
+	for (const dependencyId of dependencyIds) {
+		if (visited.has(dependencyId)) {
+			continue;
+		}
+		visited.add(dependencyId);
+		const path = findPath(dependencyId, destinationItemId, getItem);
+		visited.delete(dependencyId);
+		if (path) {
+			return [sourceItemId, ...path];
+		}
+	}
+
+	return null;
 }

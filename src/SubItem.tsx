@@ -4,10 +4,18 @@ import ItemStoreContext from './ItemStoreContext';
 import { useIndirectDependencyCompletionStatus } from './ItemUtilities';
 import { ItemProps } from './types';
 
-function SubItem({ item, index }: { item: ItemProps; index: number }) {
+function SubItem({
+	item,
+	index,
+	path,
+}: {
+	item: ItemProps;
+	index: number;
+	path: string[];
+}) {
 	useDebugValue(item);
 
-	const { removeDependencyFromItem, toggleItemCompleted } =
+	const { removeDependencyFromItem, toggleItemCompleted, getItem } =
 		useContext(ItemStoreContext);
 
 	const [rootItemId, setRootItemId] = useContext(RootItemIdContext);
@@ -50,6 +58,14 @@ function SubItem({ item, index }: { item: ItemProps; index: number }) {
 			</button>
 			{item.target != null && <b>{item.target.toLocaleString()}</b>}
 			{item.description && <p style={{ color: 'grey' }}>{item.description}</p>}
+			<pre>
+				{path &&
+					path
+						.slice(0, path.length - 1)
+						.reverse()
+						.map(id => getItem(id)!.name)
+						.join(' < ')}
+			</pre>
 		</div>
 	);
 }
