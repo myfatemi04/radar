@@ -5,7 +5,7 @@ import ItemStoreContext from './ItemStoreContext';
 import { getItemsSearchResults } from './ItemUtilities';
 
 const commandsAndDescriptions = {
-	'/t': 'Create a new item',
+	'/t <name>': 'Create a new item',
 	'/b': 'Navigate back',
 	'/#': 'Navigate to item by label',
 };
@@ -15,6 +15,7 @@ const CompletionRow: FC = ({ children }) => {
 		<div
 			style={{
 				display: 'flex',
+				alignItems: 'center',
 				backgroundColor: '#303030',
 				padding: '1rem',
 				marginTop: '0.5rem',
@@ -38,22 +39,42 @@ export default function useCommandPaletteSuggestions(text: string) {
 	if (text.startsWith('/')) {
 		if (text.length === 1) {
 			return (
-				<>
-					{Object.entries(commandsAndDescriptions).map(
-						([command, description]) => {
-							return (
-								<CompletionRow key={command}>
-									<span
-										style={{ fontFamily: 'monospace', marginRight: '1rem' }}
-									>
-										{command}
-									</span>
-									<span>{description}</span>
-								</CompletionRow>
-							);
-						}
-					)}
-				</>
+				<CompletionRow>
+					<table style={{ width: '100%' }}>
+						<thead>
+							<tr style={{ textAlign: 'left' }}>
+								<th style={{ fontFamily: 'monospace', fontSize: '1rem' }}>
+									Command
+								</th>
+								<th>Description</th>
+							</tr>
+						</thead>
+						<tbody>
+							{Object.entries(commandsAndDescriptions).map(
+								([command, description]) => {
+									return (
+										<tr key={command}>
+											<td
+												style={{ fontFamily: 'monospace', marginRight: '1rem' }}
+											>
+												{command}
+											</td>
+											<td>{description}</td>
+										</tr>
+									);
+								}
+							)}
+						</tbody>
+					</table>
+				</CompletionRow>
+			);
+		} else if (text.startsWith('/t ') && text.length > 3) {
+			const rest = text.substring(3);
+			return (
+				<CompletionRow>
+					<span style={{ marginRight: '1ch' }}>Add an item with the name</span>
+					<span style={{ fontFamily: 'monospace' }}>{rest}</span>
+				</CompletionRow>
 			);
 		}
 		return null;
