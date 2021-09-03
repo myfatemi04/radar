@@ -20,9 +20,18 @@ function SubItem({
 
 	const [rootItemId, setRootItemId] = useContext(RootItemIdContext);
 
-	const [completed, total] = useIndirectDependencyCompletionStatus(item.id);
+	const [completedDependencyCount, totalDependencyCount] =
+		useIndirectDependencyCompletionStatus(item.id);
+
+	const completedDirectly = item.completedAt !== null;
 
 	const hasDependencies = item.dependencyIds.length > 0;
+
+	const completed =
+		(hasDependencies && completedDependencyCount === totalDependencyCount) ||
+		completedDirectly;
+
+	const borderColor = completed ? '#80ff80' : '#ffffff';
 
 	return (
 		<div
@@ -30,7 +39,7 @@ function SubItem({
 				display: 'flex',
 				flexDirection: 'column',
 				marginTop: '1rem',
-				border: '1px solid white',
+				border: `1px solid ${borderColor}`,
 				padding: '0.5rem',
 			}}
 		>
@@ -57,7 +66,7 @@ function SubItem({
 				</h2>
 				{hasDependencies ? (
 					<span style={{ fontFamily: 'monospace', fontWeight: 'bold' }}>
-						{completed} / {total}
+						{completedDependencyCount} / {totalDependencyCount}
 					</span>
 				) : (
 					<button
