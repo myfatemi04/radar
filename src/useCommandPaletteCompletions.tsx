@@ -4,12 +4,6 @@ import { RootItemIdContext } from './AppContexts';
 import ItemStoreContext from './ItemStoreContext';
 import { getItemsSearchResults } from './ItemUtilities';
 
-const commandsAndDescriptions = {
-	'/t <name>': 'Create a new item',
-	'/b': 'Navigate back',
-	'/#': 'Navigate to item by label',
-};
-
 const CompletionRow: FC = ({ children }) => {
 	return (
 		<div
@@ -37,38 +31,7 @@ export default function useCommandPaletteSuggestions(text: string) {
 	const { items } = useContext(ItemStoreContext);
 
 	if (text.startsWith('/')) {
-		if (text.length === 1) {
-			return (
-				<CompletionRow>
-					<table style={{ width: '100%' }}>
-						<thead>
-							<tr style={{ textAlign: 'left' }}>
-								<th style={{ fontFamily: 'monospace', fontSize: '1rem' }}>
-									Command
-								</th>
-								<th>Description</th>
-							</tr>
-						</thead>
-						<tbody>
-							{Object.entries(commandsAndDescriptions).map(
-								([command, description]) => {
-									return (
-										<tr key={command}>
-											<td
-												style={{ fontFamily: 'monospace', marginRight: '1rem' }}
-											>
-												{command}
-											</td>
-											<td>{description}</td>
-										</tr>
-									);
-								}
-							)}
-						</tbody>
-					</table>
-				</CompletionRow>
-			);
-		} else if (text.startsWith('/t ') && text.length > 3) {
+		if (text.startsWith('/t ') && text.length > 3) {
 			const rest = text.substring(3);
 			return (
 				<CompletionRow>
