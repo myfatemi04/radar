@@ -5,11 +5,12 @@ import {
 	useMemo,
 	useState,
 } from 'react';
+import { RootItemIdContext } from './AppContexts';
 import createEmptyItem from './createEmptyItem';
 import ItemsStoreContext from './ItemsStoreContext';
 import { ItemProps } from './types';
 
-function Item({ item }: { item: ItemProps }) {
+function SubItem({ item }: { item: ItemProps }) {
 	useDebugValue(item);
 	const {
 		items,
@@ -42,6 +43,7 @@ function Item({ item }: { item: ItemProps }) {
 		},
 		[addItem, item.id]
 	);
+	const [, setRootItemId] = useContext(RootItemIdContext);
 	return (
 		<div
 			style={{
@@ -52,7 +54,9 @@ function Item({ item }: { item: ItemProps }) {
 				flexDirection: 'column',
 			}}
 		>
-			<h2>{item.name}</h2>
+			<h2 style={{ cursor: 'pointer' }} onClick={() => setRootItemId(item.id)}>
+				{item.name}
+			</h2>
 			{item.id !== '0' && (
 				<div>
 					<button
@@ -153,4 +157,4 @@ function Item({ item }: { item: ItemProps }) {
 	);
 }
 
-export default Item;
+export default SubItem;

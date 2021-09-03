@@ -1,5 +1,5 @@
 import { useContext } from 'react';
-import Item from './Item';
+import SubItem from './SubItem';
 import ItemsStoreContext from './ItemsStoreContext';
 import { ItemProps } from './types';
 
@@ -21,7 +21,7 @@ export default function RootItem({ item }: { item: ItemProps }) {
 				{item.dependencyIds.map(id => {
 					const item = getItem(id);
 					if (item) {
-						return <Item key={id} item={item} />;
+						return <SubItem key={id} item={item} />;
 					} else {
 						return null;
 					}

@@ -1,5 +1,5 @@
 import { useCallback, useContext, useState } from 'react';
-import { CommandPaletteContext } from './AppContexts';
+import { CommandPaletteContext, RootItemIdContext } from './AppContexts';
 import createEmptyItem from './createEmptyItem';
 import ItemsStoreContext from './ItemsStoreContext';
 import useKeybind from './useKeybind';
@@ -7,6 +7,7 @@ import useKeybind from './useKeybind';
 export function CommandPalette() {
 	const [, setCommandPaletteOpen] = useContext(CommandPaletteContext);
 	const [command, setCommand] = useState('');
+	const [rootItemId] = useContext(RootItemIdContext);
 	const I = useContext(ItemsStoreContext);
 
 	useKeybind(
@@ -27,12 +28,12 @@ export function CommandPalette() {
 				if (name.trim() === '') {
 					return;
 				}
-				I.addItem(createEmptyItem({ name }), '0');
+				I.addItem(createEmptyItem({ name }), rootItemId);
 				setCommandPaletteOpen(false);
 				break;
 			}
 		}
-	}, [I, command, setCommandPaletteOpen]);
+	}, [I, command, rootItemId, setCommandPaletteOpen]);
 
 	useKeybind('Enter', onEnteredCommand);
 
