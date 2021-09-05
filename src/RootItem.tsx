@@ -91,7 +91,7 @@ export default function RootItem({ item }: { item: ItemProps }) {
 				</span>
 			</div>
 
-			<GoalProgressBar item={item} />
+			{item.dependencyIds.length > 0 && <GoalProgressBar item={item} />}
 
 			{view === RootItemView.Goals ? (
 				<RootItemGoalsView item={item} />
