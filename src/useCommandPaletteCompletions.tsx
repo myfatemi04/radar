@@ -39,6 +39,9 @@ export default function useCommandPaletteSuggestions(
 		}
 		return [];
 	} else {
+		if (text.length === 0) {
+			return [];
+		}
 		const matches = Array.from(state.search(text, rootItemId));
 		return matches.map(match => ({
 			label: match.name,

@@ -62,7 +62,6 @@ export function CommandPalette({
 			return;
 		}
 		const [commandName, ...args] = command.split(' ');
-		console.log(commandName, args);
 
 		switch (commandName.toLowerCase()) {
 			case '/t': {
@@ -89,7 +88,6 @@ export function CommandPalette({
 						const dependencyId = itemIndexToItemId(dependencyIndex);
 
 						if (dependencyId !== null) {
-							console.log('Dependencies:', +rest, dependencyId);
 							setRootItemId(dependencyId);
 							done();
 
