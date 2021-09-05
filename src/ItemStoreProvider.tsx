@@ -41,6 +41,10 @@ const ItemStoreProvider: FC = ({ children }) => {
 		});
 	}, [store]);
 
+	useEffect(() => {
+		saveItems(Array.from(state.items.values()));
+	}, [state]);
+
 	return (
 		<ItemStoreContext.Provider value={{ state, store }}>
 			{children}
