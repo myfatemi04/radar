@@ -10,16 +10,21 @@ export default function DatetimePickerNullable({
 	onChange: (value: Date | null) => void;
 	style?: CSSProperties;
 }) {
-	return value !== null ? (
+	return (
 		<div style={{ display: 'flex', ...style }}>
-			<button style={{ marginRight: '0.5rem' }} onClick={() => onChange(null)}>
-				Clear
-			</button>
-			<DatetimePicker value={value} onChange={onChange} />
-		</div>
-	) : (
-		<div style={{ display: 'flex', ...style }}>
-			<button onClick={() => onChange(new Date())}>Add time</button>
+			{value !== null ? (
+				<>
+					<button
+						style={{ marginRight: '0.5rem' }}
+						onClick={() => onChange(null)}
+					>
+						Clear
+					</button>
+					<DatetimePicker value={value} onChange={onChange} />
+				</>
+			) : (
+				<button onClick={() => onChange(new Date())}>Add time</button>
+			)}
 		</div>
 	);
 }
