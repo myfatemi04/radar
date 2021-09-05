@@ -1,4 +1,5 @@
 import { useCallback, useContext, useState } from 'react';
+import { CommandPaletteContext } from './AppContexts';
 import { CommandPaletteWrapper } from './CommandPalette';
 import GoalProgressBar from './GoalProgressBar';
 import ItemStoreContext from './ItemStoreContext';
@@ -62,7 +63,11 @@ export default function RootItem({ item }: { item: ItemProps }) {
 			<RootItemInformationSection item={item} />
 
 			{commandPaletteOpen && (
-				<CommandPaletteWrapper itemIndexToItemId={indexToItemId} />
+				<CommandPaletteContext.Provider
+					value={[commandPaletteOpen, setCommandPaletteOpen]}
+				>
+					<CommandPaletteWrapper itemIndexToItemId={indexToItemId} />
+				</CommandPaletteContext.Provider>
 			)}
 
 			<div style={{ display: 'flex', marginTop: '1rem' }}>

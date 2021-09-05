@@ -23,7 +23,6 @@ export function getItemsSearchResults(
 	const getItem = (id: string) => items.find(item => item.id === id);
 	const searchKey = text.toLowerCase();
 	if (!searchKey) {
-		console.log('empty search key');
 		return [];
 	}
 	return items.filter(other => {

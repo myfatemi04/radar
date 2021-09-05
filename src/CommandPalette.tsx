@@ -1,17 +1,38 @@
 import {
+	FC,
 	useCallback,
 	useContext,
 	useLayoutEffect,
 	useRef,
 	useState,
 } from 'react';
-import { RootItemIdContext } from './AppContexts';
+import { CommandPaletteContext, RootItemIdContext } from './AppContexts';
 import createEmptyItem from './createEmptyItem';
 import isNaturalNumber from './isDigit';
 import ItemStoreContext from './ItemStoreContext';
 import NavigateToPreviousRootItemContext from './NavigateToPreviousRootItemContext';
 import useCommandPaletteSuggestions from './useCommandPaletteCompletions';
 import useKeybind from './useKeybind';
+
+export const CompletionRow: FC<{ onClick: () => void }> = ({
+	children,
+	onClick,
+}) => {
+	return (
+		<div
+			style={{
+				display: 'flex',
+				alignItems: 'center',
+				backgroundColor: '#303030',
+				padding: '1rem',
+				cursor: 'pointer',
+			}}
+			onClick={onClick}
+		>
+			{children}
+		</div>
+	);
+};
 
 export function CommandPalette({
 	itemIndexToItemId,
@@ -23,9 +44,12 @@ export function CommandPalette({
 	const ref = useRef<HTMLInputElement>(null);
 	const I = useContext(ItemStoreContext);
 
+	const [, setCommandPaletteOpen] = useContext(CommandPaletteContext);
+
 	const done = useCallback(() => {
 		setCommand('');
-	}, []);
+		setCommandPaletteOpen(false);
+	}, [setCommandPaletteOpen]);
 
 	useLayoutEffect(() => {
 		ref.current?.focus();
@@ -115,7 +139,17 @@ export function CommandPalette({
 					maxHeight: 'calc(100% - 2rem)',
 				}}
 			>
-				{suggestions}
+				{suggestions.map(({ onClick, label }, index) => (
+					<CompletionRow
+						key={index}
+						onClick={() => {
+							onClick();
+							done();
+						}}
+					>
+						{label}
+					</CompletionRow>
+				))}
 			</div>
 		</div>
 	);
