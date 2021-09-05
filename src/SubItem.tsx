@@ -1,4 +1,4 @@
-import { useContext, useDebugValue, useState } from 'react';
+import { useContext, useDebugValue } from 'react';
 import { RootItemIdContext } from './AppContexts';
 import DatetimePicker from './DatetimePicker';
 import ItemStoreContext from './ItemStoreContext';
@@ -21,6 +21,7 @@ function SubItem({
 		toggleItemCompleted,
 		getItem,
 		setItemTargetTime,
+		setItemDescription,
 	} = useContext(ItemStoreContext);
 
 	const [rootItemId, setRootItemId] = useContext(RootItemIdContext);
@@ -38,97 +39,127 @@ function SubItem({
 
 	const borderColor = completed ? '#80ff80' : '#ffffff';
 
-	const [targetTimePickerOpen, setTargetTimePickerOpen] = useState(false);
-
 	return (
 		<div
 			style={{
 				display: 'flex',
-				flexDirection: 'column',
+				flexDirection: 'row',
+				width: '100%',
 				marginTop: '1rem',
 				border: `1px solid ${borderColor}`,
 				padding: '0.5rem',
 			}}
 		>
-			{path && (
-				<span style={{ fontFamily: 'monospace' }}>
-					{path
-						.slice(0, path.length - 1)
-						.map(id => getItem(id)!.name)
-						.join(' > ')}
-				</span>
-			)}
-			<div
-				style={{
-					display: 'flex',
-					alignItems: 'center',
-				}}
-			>
-				<pre>{index}</pre>
+			<pre style={{ marginTop: 0, marginRight: '0.5rem' }}>{index}</pre>
+			<div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
+				{path.length > 0 && (
+					<span style={{ fontFamily: 'monospace', marginBottom: '0.5rem' }}>
+						{path.slice(1, path.length - 1).map((id, index) => {
+							const item = getItem(id)!;
+							return (
+								<>
+									<span
+										style={{
+											textDecoration: 'underline',
+											cursor: 'pointer',
+										}}
+										onClick={() => setRootItemId(item.id)}
+									>
+										{item.name}
+									</span>
+
+									{index + 1 < path.length - 2 && ' > '}
+								</>
+							);
+						})}
+					</span>
+				)}
 				<h2
-					style={{ cursor: 'pointer', margin: '0 0.5rem' }}
+					style={{ cursor: 'pointer', margin: 0 }}
 					onClick={() => setRootItemId(item.id)}
 				>
 					{item.name}
 				</h2>
-				{hasDependencies ? (
-					<span
-						style={{
-							fontFamily: 'monospace',
-							fontWeight: 'bold',
-							margin: '0 0.5rem',
-						}}
-					>
-						{completedDependencyCount} / {totalDependencyCount}
-					</span>
-				) : (
-					<button
-						style={{ margin: '0 0.5rem' }}
-						onClick={() => toggleItemCompleted(item.id)}
-					>
-						{item.completedAt === null ? 'Mark complete' : 'Unmark complete'}
-					</button>
-				)}
-				{item.description && (
-					<p style={{ color: 'grey' }}>{item.description}</p>
-				)}
-				{targetTimePickerOpen ? (
-					<>
+
+				<div>
+					{
+						// Completion
+						hasDependencies ? (
+							<span
+								style={{
+									fontFamily: 'monospace',
+									fontWeight: 'bold',
+									marginRight: '0.5rem',
+								}}
+							>
+								{completedDependencyCount} / {totalDependencyCount}
+							</span>
+						) : (
+							<button
+								style={{
+									marginRight: '0.5rem',
+								}}
+								onClick={() => toggleItemCompleted(item.id)}
+							>
+								{item.completedAt === null
+									? 'Mark complete'
+									: 'Unmark complete'}
+							</button>
+						)
+					}
+				</div>
+
+				<div>
+					{
+						// Target time
+						item.target !== null ? (
+							<>
+								<button
+									style={{ marginRight: '0.5rem' }}
+									onClick={() => setItemTargetTime(item.id, null)}
+								>
+									Clear
+								</button>
+								<DatetimePicker
+									value={item.target}
+									onChange={date => setItemTargetTime(item.id, date)}
+								/>
+							</>
+						) : (
+							<button
+								onClick={() => setItemTargetTime(item.id, new Date())}
+								style={{ cursor: 'pointer', margin: '0.5rem 0' }}
+							>
+								Add target time
+							</button>
+						)
+					}
+				</div>
+
+				<textarea
+					rows={item.description.split('\n').length}
+					style={{ marginBottom: '0.5rem' }}
+					value={item.description}
+					placeholder='Description'
+					onKeyDown={e => {
+						if (e.key === 'Enter') {
+							e.stopPropagation();
+						}
+					}}
+					onChange={e => setItemDescription(item.id, e.target.value)}
+				>
+					{item.description}
+				</textarea>
+
+				<div>
+					{item.id !== '0' && (
 						<button
-							style={{ margin: '0 0.5rem' }}
-							onClick={() => setTargetTimePickerOpen(false)}
+							onClick={() => removeDependencyFromItem(rootItemId, item.id)}
 						>
-							Close
+							Delete
 						</button>
-						<button
-							style={{ margin: '0 0.5rem' }}
-							onClick={() => setItemTargetTime(item.id, null)}
-						>
-							Clear
-						</button>
-						<DatetimePicker
-							value={item.target}
-							onChange={date => setItemTargetTime(item.id, date)}
-						/>
-					</>
-				) : (
-					<span
-						onClick={() => setTargetTimePickerOpen(true)}
-						style={{ cursor: 'pointer' }}
-					>
-						{item.target
-							? item.target.toLocaleString()
-							: 'Choose a target time'}
-					</span>
-				)}
-				{item.id !== '0' && (
-					<button
-						style={{ margin: '0 0.5rem' }}
-						onClick={() => removeDependencyFromItem(rootItemId, item.id)}
-					>
-						Remove
-					</button>
-				)}
+					)}
+				</div>
 			</div>
 		</div>
 	);
