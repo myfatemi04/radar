@@ -27,6 +27,7 @@ function AutoresizableTextarea(
 			rows={rows}
 			onKeyDown={e => e.stopPropagation()}
 			ref={ref}
+			value={value}
 			{...props}
 		/>
 	);

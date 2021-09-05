@@ -38,7 +38,8 @@ export default function RootItemInformationSection({
 				Description
 			</pre>
 			<AutoresizableTextarea
-				style={{ marginBottom: '0.5rem', backgroundColor: '#202020' }}
+				style={{ marginBottom: '0.5rem' }}
+				placeholder='...'
 				value={item.description}
 				cols={80}
 				onChange={e => setItemDescription(item.id, e.target.value)}
