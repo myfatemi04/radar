@@ -42,7 +42,7 @@ export function CommandPalette({
 	const [command, setCommand] = useState('');
 	const [rootItemId, setRootItemId] = useContext(RootItemIdContext);
 	const ref = useRef<HTMLInputElement>(null);
-	const I = useContext(ItemStoreContext);
+	const { store } = useContext(ItemStoreContext);
 
 	const [, setCommandPaletteOpen] = useContext(CommandPaletteContext);
 
@@ -70,7 +70,7 @@ export function CommandPalette({
 				if (name.trim() === '') {
 					return;
 				}
-				I.addItem(createEmptyItem({ name }), rootItemId);
+				store.addItem(createEmptyItem({ name }), rootItemId);
 				done();
 				break;
 			}
@@ -99,7 +99,15 @@ export function CommandPalette({
 				}
 			}
 		}
-	}, [I, back, command, done, itemIndexToItemId, rootItemId, setRootItemId]);
+	}, [
+		back,
+		command,
+		done,
+		itemIndexToItemId,
+		rootItemId,
+		setRootItemId,
+		store,
+	]);
 
 	useKeybind('Enter', onEnteredCommand);
 

@@ -1,9 +1,8 @@
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useContext, useMemo, useState } from 'react';
 import { CommandPaletteContext } from './AppContexts';
 import { CommandPaletteWrapper } from './CommandPalette';
 import GoalProgressBar from './GoalProgressBar';
 import ItemStoreContext from './ItemStoreContext';
-import { findLeaves } from './ItemUtilities';
 import NavigateToPreviousRootItemContext from './NavigateToPreviousRootItemContext';
 import RootItemGoalsView from './RootItemDirectDependenciesList';
 import RootItemInformationSection from './RootItemInformationSection';
@@ -21,9 +20,12 @@ export default function RootItem({ item }: { item: ItemProps }) {
 
 	const back = useContext(NavigateToPreviousRootItemContext);
 
-	const { items } = useContext(ItemStoreContext);
+	const { state } = useContext(ItemStoreContext);
 
-	const leaves = findLeaves(items, item.id);
+	const leaves = useMemo(
+		() => Array.from(state.leaves(item.id)),
+		[item.id, state]
+	);
 
 	// eslint-disable-next-line
 	const indexToItemId = useCallback(

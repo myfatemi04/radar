@@ -1,7 +1,6 @@
 import { ReactNode, useContext } from 'react';
 import { RootItemIdContext } from './AppContexts';
 import ItemStoreContext from './ItemStoreContext';
-import { getItemsSearchResults } from './ItemUtilities';
 
 export type Suggestion = {
 	label: ReactNode;
@@ -18,7 +17,7 @@ export default function useCommandPaletteSuggestions(
 	text: string
 ): Suggestion[] {
 	const [rootItemId] = useContext(RootItemIdContext);
-	const { items } = useContext(ItemStoreContext);
+	const { state } = useContext(ItemStoreContext);
 	const [, setRootItemId] = useContext(RootItemIdContext);
 
 	if (text.startsWith('/')) {
@@ -40,7 +39,7 @@ export default function useCommandPaletteSuggestions(
 		}
 		return [];
 	} else {
-		const matches = getItemsSearchResults(items, text, rootItemId, true);
+		const matches = Array.from(state.search(text, rootItemId));
 		return matches.map(match => ({
 			label: match.name,
 			onClick: () => setRootItemId(match.id),

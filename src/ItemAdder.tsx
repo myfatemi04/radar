@@ -3,7 +3,7 @@ import createEmptyItem from './createEmptyItem';
 import ItemStoreContext from './ItemStoreContext';
 
 function ItemAdder() {
-	const { addItem } = useContext(ItemStoreContext);
+	const { store } = useContext(ItemStoreContext);
 
 	const nameRef = useRef<HTMLInputElement>(null);
 
@@ -17,10 +17,10 @@ function ItemAdder() {
 			return;
 		}
 
-		addItem(createEmptyItem({ name }), '0');
+		store.addItem(createEmptyItem({ name }), '0');
 
 		nameRef.current.value = '';
-	}, [addItem]);
+	}, [store]);
 
 	return (
 		<div style={{ width: '20rem' }}>

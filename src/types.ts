@@ -5,5 +5,4 @@ export type ItemProps = {
 	target: Date | null;
 	completedAt: Date | null;
 	dependencyIds: string[];
-	dependencyForIds: string[];
 };

@@ -2,9 +2,9 @@ import { useContext, useMemo } from 'react';
 import ItemStoreContext from './ItemStoreContext';
 
 function useItem(id: string) {
-	const { getItem } = useContext(ItemStoreContext);
+	const { state } = useContext(ItemStoreContext);
 
-	return useMemo(() => getItem(id), [getItem, id]);
+	return useMemo(() => state.getItem(id), [id, state]);
 }
 
 export default useItem;

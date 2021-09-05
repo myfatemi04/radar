@@ -1,51 +1,14 @@
-import { createContext, Dispatch, SetStateAction } from 'react';
-import { ItemProps } from './types';
+import { createContext } from 'react';
+import ItemStore, { ItemStoreState } from './ItemStore';
 
 export type ItemsStoreContextProps = {
-	items: ItemProps[];
-	setItems: Dispatch<SetStateAction<ItemProps[]>>;
-	removeItem: (id: string) => void;
-	addItem: (item: ItemProps, parentId: string) => void;
-	getItem: (id: string) => ItemProps | undefined;
-	addDependencyToItem: (id: string, dependency: string) => void;
-	removeDependencyFromItem: (id: string, dependency: string) => void;
-	toggleItemCompleted: (id: string) => void;
-	setItemTargetTime: (id: string, targetTime: Date | null) => void;
-	setItemDescription: (id: string, description: string) => void;
-	setItemName: (id: string, name: string) => void;
+	store: ItemStore;
+	state: ItemStoreState;
 };
 
 const ItemStoreContext = createContext<ItemsStoreContextProps>({
-	items: [],
-	setItems: (() => {}) as Dispatch<SetStateAction<ItemProps[]>>,
-	removeItem(id: string) {
-		console.log('removeItem', id);
-	},
-	addItem(item: ItemProps, parentId: string) {
-		console.log('addItem', item, parentId);
-	},
-	getItem(id: string): ItemProps | undefined {
-		console.log('getItem', id);
-		return undefined;
-	},
-	addDependencyToItem(id: string, dependency: string) {
-		console.log('addDependencyToItem', id, dependency);
-	},
-	removeDependencyFromItem(id: string, dependency: string) {
-		console.log('removeDependencyFromItem', id, dependency);
-	},
-	toggleItemCompleted(id: string) {
-		console.log('toggleItemCompleted', id);
-	},
-	setItemTargetTime(id: string, targetTime: Date | null) {
-		console.log('setItemTargetTime', id, targetTime);
-	},
-	setItemDescription(id: string, description: string) {
-		console.log('setItemDescription', id, description);
-	},
-	setItemName(id: string, name: string) {
-		console.log('setItemName', id, name);
-	},
+	store: new ItemStore([]),
+	state: new ItemStoreState(),
 });
 
 export default ItemStoreContext;

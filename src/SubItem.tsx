@@ -17,13 +17,7 @@ function SubItem({
 }) {
 	useDebugValue(item);
 
-	const {
-		removeDependencyFromItem,
-		toggleItemCompleted,
-		getItem,
-		setItemTargetTime,
-		setItemDescription,
-	} = useContext(ItemStoreContext);
+	const { store, state } = useContext(ItemStoreContext);
 
 	const [rootItemId, setRootItemId] = useContext(RootItemIdContext);
 
@@ -61,7 +55,7 @@ function SubItem({
 				{visiblePathItems.length > 0 && (
 					<span style={{ fontFamily: 'monospace', marginBottom: '0.5rem' }}>
 						{visiblePathItems.map((id, index) => {
-							const item = getItem(id)!;
+							const item = state.getItem(id)!;
 							return (
 								<>
 									<span
@@ -100,7 +94,7 @@ function SubItem({
 								{completedDependencyCount} / {totalDependencyCount}
 							</span>
 						) : (
-							<button onClick={() => toggleItemCompleted(item.id)}>
+							<button onClick={() => store.toggleCompleted(item.id)}>
 								{item.completedAt === null
 									? 'Mark complete'
 									: 'Unmark complete'}
@@ -112,7 +106,7 @@ function SubItem({
 				<pre style={{ marginBottom: '0.25rem', color: '#808080' }}>Target</pre>
 				<DatetimePickerNullable
 					value={item.target}
-					onChange={t => setItemTargetTime(item.id, t)}
+					onChange={t => store.setItemTarget(item.id, t)}
 				/>
 
 				<pre style={{ marginBottom: '0.25rem', color: '#808080' }}>
@@ -122,13 +116,15 @@ function SubItem({
 					style={{ marginBottom: '0.5rem' }}
 					placeholder='...'
 					value={item.description}
-					onChange={e => setItemDescription(item.id, e.target.value)}
+					onChange={e => store.setItemDescription(item.id, e.target.value)}
 				/>
 
 				<div>
 					{item.id !== '0' && (
 						<button
-							onClick={() => removeDependencyFromItem(rootItemId, item.id)}
+							onClick={() =>
+								store.removeDependencyFromItem(rootItemId, item.id)
+							}
 						>
 							Delete
 						</button>

@@ -6,12 +6,12 @@ import SubItem from './SubItem';
 import { ItemProps } from './types';
 
 export default function RootItemGoalsView({ item }: { item: ItemProps }) {
-	const { getItem, removeDependencyFromItem } = useContext(ItemStoreContext);
+	const { store, state } = useContext(ItemStoreContext);
 
 	return (
 		<div style={{ display: 'flex', flexDirection: 'column' }}>
 			{item.dependencyIds.map((dependencyId, index) => {
-				const dependency = getItem(dependencyId);
+				const dependency = state.getItem(dependencyId);
 				if (dependency) {
 					return (
 						<SubItem
@@ -22,7 +22,7 @@ export default function RootItemGoalsView({ item }: { item: ItemProps }) {
 						/>
 					);
 				} else {
-					removeDependencyFromItem(item.id, dependencyId);
+					store.removeDependencyFromItem(item.id, dependencyId);
 					return null;
 				}
 			})}

@@ -9,7 +9,7 @@ import useItem from './useItem';
 
 export default function RootItemSearchBar() {
 	const [rootItemId] = useContext(RootItemIdContext);
-	const { addDependencyToItem } = useContext(ItemStoreContext);
+	const { store } = useContext(ItemStoreContext);
 	const item = useItem(rootItemId)!;
 	const [addItemTextboxText, setAddItemTextboxText] = useState('');
 
@@ -45,7 +45,7 @@ export default function RootItemSearchBar() {
 					<p>{result.description}</p>
 					<button
 						onClick={() => {
-							addDependencyToItem(item.id, result.id);
+							store.addDependencyToItem(item.id, result.id);
 							setAddItemTextboxText('');
 						}}
 					>

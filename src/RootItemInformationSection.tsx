@@ -9,8 +9,7 @@ export default function RootItemInformationSection({
 }: {
 	item: ItemProps;
 }) {
-	const { setItemTargetTime, setItemDescription, setItemName } =
-		useContext(ItemStoreContext);
+	const { store } = useContext(ItemStoreContext);
 
 	const descriptionTextareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -24,14 +23,14 @@ export default function RootItemInformationSection({
 				}}
 				type='text'
 				value={item.name}
-				onChange={e => setItemName(item.id, e.target.value)}
+				onChange={e => store.setItemName(item.id, e.target.value)}
 			/>
 
 			<pre style={{ marginBottom: '0.25rem', color: '#808080' }}>Target</pre>
 			<DatetimePickerNullable
 				style={{ marginBottom: '0.5rem' }}
 				value={item.target}
-				onChange={date => setItemTargetTime(item.id, date)}
+				onChange={date => store.setItemTarget(item.id, date)}
 			/>
 
 			<pre style={{ marginBottom: '0.25rem', color: '#808080' }}>
@@ -42,7 +41,7 @@ export default function RootItemInformationSection({
 				placeholder='...'
 				value={item.description}
 				cols={80}
-				onChange={e => setItemDescription(item.id, e.target.value)}
+				onChange={e => store.setItemDescription(item.id, e.target.value)}
 				ref={descriptionTextareaRef}
 			/>
 		</>

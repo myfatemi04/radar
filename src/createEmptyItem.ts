@@ -9,7 +9,6 @@ export default function createEmptyItem(
 		target: null,
 		description: '',
 		dependencyIds: [],
-		dependencyForIds: [],
 		completedAt: null,
 		...initialProps,
 	};
