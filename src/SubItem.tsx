@@ -52,7 +52,7 @@ function SubItem({
 				flexDirection: 'row',
 				width: '100%',
 				marginTop: '1rem',
-				border: `1px solid ${borderColor}`,
+				border: `0.125rem solid ${borderColor}`,
 				padding: '1rem 0.5rem',
 			}}
 		>
