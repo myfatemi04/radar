@@ -22,7 +22,6 @@ export default function RootItemPriorityView({
 
 	return (
 		<div style={{ display: 'flex', flexDirection: 'column' }}>
-			<h1 style={{ marginTop: '1rem', marginBottom: 0 }}>Priority</h1>
 			{sortedLeaves.map(
 				([path, leaf], index) =>
 					leaf && (

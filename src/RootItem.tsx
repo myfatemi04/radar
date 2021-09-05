@@ -1,4 +1,5 @@
 import { useCallback, useContext, useState } from 'react';
+import GoalProgressBar from './GoalProgressBar';
 import ItemStoreContext from './ItemStoreContext';
 import { findLeaves } from './ItemUtilities';
 import NavigateToPreviousRootItemContext from './NavigateToPreviousRootItemContext';
@@ -61,25 +62,36 @@ export default function RootItem({ item }: { item: ItemProps }) {
 				>
 					Back
 				</button>
+			</div>
 
-				<button
+			<div style={{ marginTop: '0.5rem', fontFamily: 'monospace' }}>
+				<span
 					style={{
-						padding: '0.5rem 1rem',
+						fontSize: '2rem',
+						fontWeight: 'bold',
 						marginRight: '1rem',
+						cursor: 'pointer',
+						textDecoration: view === RootItemView.Goals ? 'underline' : 'none',
 					}}
 					onClick={() => setView(RootItemView.Goals)}
 				>
 					Goals
-				</button>
-				<button
+				</span>
+				<span
 					style={{
-						padding: '0.5rem 1rem',
+						fontSize: '2rem',
+						fontWeight: 'bold',
+						cursor: 'pointer',
+						textDecoration:
+							view === RootItemView.Priority ? 'underline' : 'none',
 					}}
 					onClick={() => setView(RootItemView.Priority)}
 				>
 					Priority
-				</button>
+				</span>
 			</div>
+
+			<GoalProgressBar item={item} />
 
 			{view === RootItemView.Goals ? (
 				<RootItemGoalsView item={item} />
