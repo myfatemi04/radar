@@ -4,9 +4,9 @@ import { CommandPaletteWrapper } from './CommandPalette';
 import GoalProgressBar from './GoalProgressBar';
 import ItemStoreContext from './ItemStoreContext';
 import NavigateToPreviousRootItemContext from './NavigateToPreviousRootItemContext';
-import RootItemGoalsView from './RootItemDirectDependenciesList';
+import RootItemGoalsView from './RootItemGoalsView';
 import RootItemInformationSection from './RootItemInformationSection';
-import RootItemPriorityView from './RootItemLeavesList';
+import RootItemPriorityView from './RootItemPriorityView';
 import { ItemProps } from './types';
 import useKeybind from './useKeybind';
 
