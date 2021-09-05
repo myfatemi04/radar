@@ -4,6 +4,7 @@ import ItemStoreContext from './ItemStoreContext';
 import { findLeaves } from './ItemUtilities';
 import NavigateToPreviousRootItemContext from './NavigateToPreviousRootItemContext';
 import RootItemGoalsView from './RootItemDirectDependenciesList';
+import RootItemInformationSection from './RootItemInformationSection';
 import RootItemSubItemsBottomUpView from './RootItemLeavesList';
 import { ItemProps } from './types';
 
@@ -46,7 +47,7 @@ export default function RootItem({ item }: { item: ItemProps }) {
 				padding: '1rem',
 			}}
 		>
-			<h1>{item.name}</h1>
+			<RootItemInformationSection item={item} />
 
 			<CommandPalette itemIndexToItemId={indexToItemId} />
 

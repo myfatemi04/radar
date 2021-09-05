@@ -18,22 +18,28 @@ code {
 
 input,
 input:focus,
-input:focus-within {
+input:focus-within,
+textarea,
+textarea:focus,
+textarea:focus-within {
 	outline: none;
 	border: none;
 }
 
-input:focus {
+input:focus,
+textarea:focus {
 	border-bottom: 1px solid #fff;
 }
 
 button,
-input {
+input,
+textarea {
 	border: none;
 	color: white;
 }
 
-input {
+input,
+textarea {
 	background-color: transparent;
 }
 

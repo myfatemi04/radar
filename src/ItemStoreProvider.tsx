@@ -154,24 +154,25 @@ const ItemStoreProvider: FC = ({ children }) => {
 		[getItem, setItems]
 	);
 
-	const setItemTargetTime = useCallback(
-		(id: string, targetTime: Date | null) => {
-			const item = getItem(id);
-			if (item) {
-				console.log(`Item with id ${id} target time set to ${targetTime}`);
-				setItems(items =>
-					items.map(item =>
-						item.id === id
-							? ({ ...item, target: targetTime } as ItemProps)
-							: item
-					)
-				);
-			} else {
-				console.warn(`Item with id ${id} not found`);
-			}
+	const useSetter = useCallback(
+		<T extends keyof ItemProps>(field: T) => {
+			return (id: string, value: ItemProps[typeof field]) => {
+				const item = getItem(id);
+				if (item) {
+					setItems(items =>
+						items.map(item =>
+							item.id === id ? { ...item, [field]: value } : item
+						)
+					);
+				}
+			};
 		},
 		[getItem, setItems]
 	);
+
+	const setItemName = useSetter('name');
+	const setItemDescription = useSetter('description');
+	const setItemTargetTime = useSetter('target');
 
 	const value: ItemsStoreContextProps = useMemo(
 		() => ({
@@ -184,6 +185,8 @@ const ItemStoreProvider: FC = ({ children }) => {
 			removeDependencyFromItem,
 			toggleItemCompleted,
 			setItemTargetTime,
+			setItemName,
+			setItemDescription,
 		}),
 		[
 			items,
@@ -195,6 +198,8 @@ const ItemStoreProvider: FC = ({ children }) => {
 			removeDependencyFromItem,
 			toggleItemCompleted,
 			setItemTargetTime,
+			setItemName,
+			setItemDescription,
 		]
 	);
 
