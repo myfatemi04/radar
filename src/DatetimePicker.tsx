@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef } from 'react';
 
 const baseStyle = {
-	padding: '0.5em',
+	// padding: '0.5em',
 };
 
 export default function DatetimePicker({

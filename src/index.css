@@ -31,6 +31,10 @@ textarea:focus {
 	border-bottom: 1px solid #fff;
 }
 
+textarea:focus {
+	background-color: #202020;
+}
+
 button,
 input,
 textarea {

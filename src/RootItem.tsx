@@ -1,5 +1,4 @@
 import { useCallback, useContext, useState } from 'react';
-import { CommandPalette } from './CommandPalette';
 import ItemStoreContext from './ItemStoreContext';
 import { findLeaves } from './ItemUtilities';
 import NavigateToPreviousRootItemContext from './NavigateToPreviousRootItemContext';
@@ -22,6 +21,7 @@ export default function RootItem({ item }: { item: ItemProps }) {
 
 	const leaves = findLeaves(items, item.id);
 
+	// eslint-disable-next-line
 	const indexToItemId = useCallback(
 		index => {
 			if (view === RootItemView.Goals) {
@@ -49,7 +49,7 @@ export default function RootItem({ item }: { item: ItemProps }) {
 		>
 			<RootItemInformationSection item={item} />
 
-			<CommandPalette itemIndexToItemId={indexToItemId} />
+			{/* <CommandPalette itemIndexToItemId={indexToItemId} /> */}
 
 			<div style={{ display: 'flex', marginTop: '1rem' }}>
 				<button
