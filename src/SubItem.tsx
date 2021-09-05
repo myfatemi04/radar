@@ -1,4 +1,4 @@
-import { useContext, useDebugValue } from 'react';
+import { useContext, useDebugValue, useMemo } from 'react';
 import { RootItemIdContext } from './AppContexts';
 import AutoresizableTextarea from './AutoresizableTextarea';
 import DatetimePickerNullable from './DatetimePickerNullable';
@@ -40,6 +40,11 @@ function SubItem({
 
 	const borderColor = completed ? '#80ff80' : '#ffffff';
 
+	const visiblePathItems = useMemo(
+		() => (path.length > 0 ? path.slice(1, path.length - 1) : []),
+		[path]
+	);
+
 	return (
 		<div
 			style={{
@@ -53,9 +58,9 @@ function SubItem({
 		>
 			<pre style={{ marginTop: 0, marginRight: '0.5rem' }}>{index}</pre>
 			<div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-				{path.length > 0 && (
+				{visiblePathItems.length > 0 && (
 					<span style={{ fontFamily: 'monospace', marginBottom: '0.5rem' }}>
-						{path.slice(1, path.length - 1).map((id, index) => {
+						{visiblePathItems.map((id, index) => {
 							const item = getItem(id)!;
 							return (
 								<>
@@ -82,7 +87,7 @@ function SubItem({
 					{item.name}
 				</h2>
 
-				<div style={{ marginBottom: '0.5rem' }}>
+				<div>
 					{
 						// Completion
 						hasDependencies ? (
@@ -90,18 +95,12 @@ function SubItem({
 								style={{
 									fontFamily: 'monospace',
 									fontWeight: 'bold',
-									marginRight: '0.5rem',
 								}}
 							>
 								{completedDependencyCount} / {totalDependencyCount}
 							</span>
 						) : (
-							<button
-								style={{
-									marginRight: '0.5rem',
-								}}
-								onClick={() => toggleItemCompleted(item.id)}
-							>
+							<button onClick={() => toggleItemCompleted(item.id)}>
 								{item.completedAt === null
 									? 'Mark complete'
 									: 'Unmark complete'}

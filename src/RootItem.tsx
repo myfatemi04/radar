@@ -4,7 +4,7 @@ import { findLeaves } from './ItemUtilities';
 import NavigateToPreviousRootItemContext from './NavigateToPreviousRootItemContext';
 import RootItemGoalsView from './RootItemDirectDependenciesList';
 import RootItemInformationSection from './RootItemInformationSection';
-import RootItemSubItemsBottomUpView from './RootItemLeavesList';
+import RootItemPriorityView from './RootItemLeavesList';
 import { ItemProps } from './types';
 
 enum RootItemView {
@@ -84,7 +84,7 @@ export default function RootItem({ item }: { item: ItemProps }) {
 			{view === RootItemView.Goals ? (
 				<RootItemGoalsView item={item} />
 			) : (
-				<RootItemSubItemsBottomUpView leaves={leaves} />
+				<RootItemPriorityView leaves={leaves} />
 			)}
 		</div>
 	);
