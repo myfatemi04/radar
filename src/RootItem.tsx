@@ -1,4 +1,5 @@
 import { useCallback, useContext, useState } from 'react';
+import { CommandPaletteWrapper } from './CommandPalette';
 import GoalProgressBar from './GoalProgressBar';
 import ItemStoreContext from './ItemStoreContext';
 import { findLeaves } from './ItemUtilities';
@@ -7,6 +8,7 @@ import RootItemGoalsView from './RootItemDirectDependenciesList';
 import RootItemInformationSection from './RootItemInformationSection';
 import RootItemPriorityView from './RootItemLeavesList';
 import { ItemProps } from './types';
+import useKeybind from './useKeybind';
 
 enum RootItemView {
 	Goals = 'goals',
@@ -39,6 +41,15 @@ export default function RootItem({ item }: { item: ItemProps }) {
 		[item.dependencyIds, leaves, view]
 	);
 
+	const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+
+	useKeybind('/', e => {
+		setCommandPaletteOpen(true);
+	});
+	useKeybind('Escape', e => {
+		setCommandPaletteOpen(false);
+	});
+
 	return (
 		<div
 			style={{
@@ -50,7 +61,9 @@ export default function RootItem({ item }: { item: ItemProps }) {
 		>
 			<RootItemInformationSection item={item} />
 
-			{/* <CommandPalette itemIndexToItemId={indexToItemId} /> */}
+			{commandPaletteOpen && (
+				<CommandPaletteWrapper itemIndexToItemId={indexToItemId} />
+			)}
 
 			<div style={{ display: 'flex', marginTop: '1rem' }}>
 				<button

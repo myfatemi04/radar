@@ -17,11 +17,13 @@ export function useCreateDependencyWithName(id: string) {
 export function getItemsSearchResults(
 	items: ItemProps[],
 	text: string,
-	rootItemId: string
+	rootItemId: string,
+	allowDescendants = false
 ) {
 	const getItem = (id: string) => items.find(item => item.id === id);
 	const searchKey = text.toLowerCase();
 	if (!searchKey) {
+		console.log('empty search key');
 		return [];
 	}
 	return items.filter(other => {
@@ -29,14 +31,16 @@ export function getItemsSearchResults(
 			return false;
 		}
 
-		// If the subitem is a parent of this item, there would be a circular dependency
-		if (isDescendant(other.id, rootItemId, getItem)) {
-			return false;
-		}
+		if (!allowDescendants) {
+			// If the subitem is a parent of this item, there would be a circular dependency
+			if (isDescendant(other.id, rootItemId, getItem)) {
+				return false;
+			}
 
-		// If the subitem is already a descendant of this item, we shouldn't suggest adding it
-		if (isDescendant(rootItemId, other.id, getItem)) {
-			return false;
+			// If the subitem is already a descendant of this item, we shouldn't suggest adding it
+			if (isDescendant(rootItemId, other.id, getItem)) {
+				return false;
+			}
 		}
 
 		if (

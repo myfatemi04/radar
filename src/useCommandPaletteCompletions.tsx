@@ -12,7 +12,6 @@ const CompletionRow: FC = ({ children }) => {
 				alignItems: 'center',
 				backgroundColor: '#303030',
 				padding: '1rem',
-				marginTop: '0.5rem',
 			}}
 		>
 			{children}
@@ -42,7 +41,7 @@ export default function useCommandPaletteSuggestions(text: string) {
 		}
 		return null;
 	} else {
-		const matches = getItemsSearchResults(items, text, rootItemId);
+		const matches = getItemsSearchResults(items, text, rootItemId, true);
 		return (
 			<>
 				{matches.map(match => (

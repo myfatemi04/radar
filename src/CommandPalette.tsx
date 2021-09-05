@@ -1,4 +1,10 @@
-import { useCallback, useContext, useRef, useState } from 'react';
+import {
+	useCallback,
+	useContext,
+	useLayoutEffect,
+	useRef,
+	useState,
+} from 'react';
 import { RootItemIdContext } from './AppContexts';
 import createEmptyItem from './createEmptyItem';
 import isNaturalNumber from './isDigit';
@@ -21,12 +27,9 @@ export function CommandPalette({
 		setCommand('');
 	}, []);
 
-	const typeCallback = useCallback(() => {
+	useLayoutEffect(() => {
 		ref.current?.focus();
 	}, []);
-
-	useKeybind('Enter', typeCallback);
-	useKeybind('/', typeCallback);
 
 	const back = useContext(NavigateToPreviousRootItemContext);
 
@@ -79,7 +82,14 @@ export function CommandPalette({
 	const suggestions = useCommandPaletteSuggestions(command);
 
 	return (
-		<div style={{ width: '100%', display: 'flex', flexDirection: 'column' }}>
+		<div
+			style={{
+				position: 'absolute',
+				inset: 0,
+				display: 'flex',
+				flexDirection: 'column-reverse',
+			}}
+		>
 			<input
 				ref={ref}
 				type='text'
@@ -87,15 +97,26 @@ export function CommandPalette({
 				onChange={e => setCommand(e.target.value)}
 				style={{
 					width: '100%',
+					height: '2rem',
 					border: 'none',
 					outline: 'none',
-					padding: '0.5em',
-					fontSize: '2em',
+					padding: '0.5rem',
+					fontSize: '1rem',
 					fontFamily: 'monospace',
 					backgroundColor: '#202020',
 				}}
 			/>
-			{suggestions}
+			<div
+				style={{
+					width: '100%',
+					display: 'flex',
+					flexDirection: 'column',
+					overflowY: 'auto',
+					maxHeight: 'calc(100% - 2rem)',
+				}}
+			>
+				{suggestions}
+			</div>
 		</div>
 	);
 }
@@ -111,12 +132,10 @@ export function CommandPaletteWrapper({
 	return (
 		<div
 			style={{
-				position: 'absolute',
-				top: '50%',
-				left: '50%',
-				transform: 'translate(-50%, -50%)',
+				position: 'fixed',
+				inset: '0.5rem',
+				maxHeight: 'calc(100vh - 1rem)',
 				zIndex: 1,
-				width: 'min(80vw, 40rem)',
 			}}
 		>
 			<CommandPalette itemIndexToItemId={itemIndexToItemId} />
