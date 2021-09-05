@@ -1,5 +1,6 @@
-import { useContext, useDebugValue } from 'react';
+import { useContext, useDebugValue, useState } from 'react';
 import { RootItemIdContext } from './AppContexts';
+import DatetimePicker from './DatetimePicker';
 import ItemStoreContext from './ItemStoreContext';
 import { useIndirectDependencyCompletionStatus } from './ItemUtilities';
 import { ItemProps } from './types';
@@ -15,8 +16,12 @@ function SubItem({
 }) {
 	useDebugValue(item);
 
-	const { removeDependencyFromItem, toggleItemCompleted, getItem } =
-		useContext(ItemStoreContext);
+	const {
+		removeDependencyFromItem,
+		toggleItemCompleted,
+		getItem,
+		setItemTargetTime,
+	} = useContext(ItemStoreContext);
 
 	const [rootItemId, setRootItemId] = useContext(RootItemIdContext);
 
@@ -32,6 +37,8 @@ function SubItem({
 		completedDirectly;
 
 	const borderColor = completed ? '#80ff80' : '#ffffff';
+
+	const [targetTimePickerOpen, setTargetTimePickerOpen] = useState(false);
 
 	return (
 		<div
@@ -65,7 +72,13 @@ function SubItem({
 					{item.name}
 				</h2>
 				{hasDependencies ? (
-					<span style={{ fontFamily: 'monospace', fontWeight: 'bold' }}>
+					<span
+						style={{
+							fontFamily: 'monospace',
+							fontWeight: 'bold',
+							margin: '0 0.5rem',
+						}}
+					>
 						{completedDependencyCount} / {totalDependencyCount}
 					</span>
 				) : (
@@ -76,9 +89,37 @@ function SubItem({
 						{item.completedAt === null ? 'Mark complete' : 'Unmark complete'}
 					</button>
 				)}
-				{item.target != null && <b>{item.target.toLocaleString()}</b>}
 				{item.description && (
 					<p style={{ color: 'grey' }}>{item.description}</p>
+				)}
+				{targetTimePickerOpen ? (
+					<>
+						<button
+							style={{ margin: '0 0.5rem' }}
+							onClick={() => setTargetTimePickerOpen(false)}
+						>
+							Close
+						</button>
+						<button
+							style={{ margin: '0 0.5rem' }}
+							onClick={() => setItemTargetTime(item.id, null)}
+						>
+							Clear
+						</button>
+						<DatetimePicker
+							value={item.target}
+							onChange={date => setItemTargetTime(item.id, date)}
+						/>
+					</>
+				) : (
+					<span
+						onClick={() => setTargetTimePickerOpen(true)}
+						style={{ cursor: 'pointer' }}
+					>
+						{item.target
+							? item.target.toLocaleString()
+							: 'Choose a target time'}
+					</span>
 				)}
 				{item.id !== '0' && (
 					<button

@@ -19,7 +19,10 @@ function loadItems(): ItemProps[] {
 	if (string === null) {
 		return defaultItems;
 	} else {
-		return JSON.parse(string) as ItemProps[];
+		return JSON.parse(string).map((rawItem: ItemProps) => ({
+			...rawItem,
+			target: rawItem.target ? new Date(rawItem.target) : null,
+		})) as ItemProps[];
 	}
 }
 
@@ -31,7 +34,7 @@ const ItemStoreProvider: FC = ({ children }) => {
 	const [items, setItems_internal] = useState(() => loadItems());
 
 	useEffect(() => {
-		console.table(items);
+		// console.table(items);
 	}, [items]);
 
 	const setItems: typeof setItems_internal = useCallback(items => {
@@ -151,6 +154,25 @@ const ItemStoreProvider: FC = ({ children }) => {
 		[getItem, setItems]
 	);
 
+	const setItemTargetTime = useCallback(
+		(id: string, targetTime: Date | null) => {
+			const item = getItem(id);
+			if (item) {
+				console.log(`Item with id ${id} target time set to ${targetTime}`);
+				setItems(items =>
+					items.map(item =>
+						item.id === id
+							? ({ ...item, target: targetTime } as ItemProps)
+							: item
+					)
+				);
+			} else {
+				console.warn(`Item with id ${id} not found`);
+			}
+		},
+		[getItem, setItems]
+	);
+
 	const value: ItemsStoreContextProps = useMemo(
 		() => ({
 			items,
@@ -161,6 +183,7 @@ const ItemStoreProvider: FC = ({ children }) => {
 			addDependencyToItem,
 			removeDependencyFromItem,
 			toggleItemCompleted,
+			setItemTargetTime,
 		}),
 		[
 			items,
@@ -171,6 +194,7 @@ const ItemStoreProvider: FC = ({ children }) => {
 			addDependencyToItem,
 			removeDependencyFromItem,
 			toggleItemCompleted,
+			setItemTargetTime,
 		]
 	);
 

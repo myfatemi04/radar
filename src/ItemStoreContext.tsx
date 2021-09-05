@@ -10,6 +10,7 @@ export type ItemsStoreContextProps = {
 	addDependencyToItem: (id: string, dependency: string) => void;
 	removeDependencyFromItem: (id: string, dependency: string) => void;
 	toggleItemCompleted: (id: string) => void;
+	setItemTargetTime: (id: string, targetTime: Date | null) => void;
 };
 
 const ItemStoreContext = createContext<ItemsStoreContextProps>({
@@ -33,6 +34,9 @@ const ItemStoreContext = createContext<ItemsStoreContextProps>({
 	},
 	toggleItemCompleted(id: string) {
 		console.log('toggleItemCompleted', id);
+	},
+	setItemTargetTime(id: string, targetTime: Date | null) {
+		console.log('setItemTargetTime', id, targetTime);
 	},
 });
 
