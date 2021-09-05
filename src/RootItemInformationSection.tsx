@@ -30,9 +30,11 @@ export default function RootItemInformationSection({
 
 			<textarea
 				style={{ marginBottom: '0.5rem' }}
+				rows={item.description.split('\n').length}
 				value={item.description}
 				placeholder='Description'
 				cols={80}
+				onKeyDown={e => e.stopPropagation()}
 				onChange={e => setItemDescription(item.id, e.target.value)}
 				ref={descriptionTextareaRef}
 			/>
