@@ -28,17 +28,6 @@ export default function RootItemInformationSection({
 				onChange={e => setItemName(item.id, e.target.value)}
 			/>
 
-			<textarea
-				style={{ marginBottom: '0.5rem' }}
-				rows={item.description.split('\n').length}
-				value={item.description}
-				placeholder='Description'
-				cols={80}
-				onKeyDown={e => e.stopPropagation()}
-				onChange={e => setItemDescription(item.id, e.target.value)}
-				ref={descriptionTextareaRef}
-			/>
-
 			<div style={{ marginBottom: '0.5rem' }}>
 				{editingTargetTime ? (
 					<>
@@ -83,6 +72,17 @@ export default function RootItemInformationSection({
 					</>
 				)}
 			</div>
+
+			<textarea
+				style={{ marginBottom: '0.5rem' }}
+				rows={item.description.split('\n').length}
+				value={item.description}
+				placeholder='Description'
+				cols={80}
+				onKeyDown={e => e.stopPropagation()}
+				onChange={e => setItemDescription(item.id, e.target.value)}
+				ref={descriptionTextareaRef}
+			/>
 		</>
 	);
 }
