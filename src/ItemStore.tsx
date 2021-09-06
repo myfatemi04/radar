@@ -4,6 +4,27 @@ import { ItemProps } from './types';
 export class ItemStoreState extends immutable.Record({
 	items: immutable.Map<string, ItemProps>(),
 }) {
+	isCompleted(id: string): boolean {
+		const item = this.items.get(id);
+		if (!item) {
+			return false;
+		}
+		if (item.completedAt !== null) {
+			return true;
+		}
+		if (item.dependencyIds.length === 0) {
+			return false;
+		}
+
+		for (const child of item.dependencyIds) {
+			if (!this.isCompleted(child)) {
+				return false;
+			}
+		}
+
+		return true;
+	}
+
 	getItem(id: string): ItemProps | undefined {
 		return this.items.get(id);
 	}
@@ -18,7 +39,7 @@ export class ItemStoreState extends immutable.Record({
 	}
 
 	*bfs(id: string): IterableIterator<[string[], ItemProps]> {
-		const queue: [string[], string][] = [[[], id]];
+		const queue: [string[], string][] = [[['0'], id]];
 		const visited = new Set<string>();
 		while (queue.length) {
 			const [path, current] = queue.shift()!;
@@ -31,7 +52,7 @@ export class ItemStoreState extends immutable.Record({
 				yield [path, item];
 			}
 			for (const child of item!.dependencyIds) {
-				queue.push([[...path, current], child]);
+				queue.push([[...path, child], child]);
 			}
 		}
 	}
