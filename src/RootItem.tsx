@@ -6,6 +6,7 @@ import ItemStoreContext from './ItemStoreContext';
 import RootItemGoalsView from './RootItemGoalsView';
 import RootItemInformationSection from './RootItemInformationSection';
 import RootItemPriorityView from './RootItemPriorityView';
+import { useBack, useForward } from './RouteHooks';
 import { ItemProps } from './types';
 import useKeybind from './useKeybind';
 
@@ -42,6 +43,8 @@ export default function RootItem({ item }: { item: ItemProps }) {
 	);
 
 	const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
+	const forward = useForward();
+	const back = useBack();
 
 	useKeybind('/', e => {
 		setCommandPaletteOpen(true);
@@ -49,6 +52,8 @@ export default function RootItem({ item }: { item: ItemProps }) {
 	useKeybind('Escape', e => {
 		setCommandPaletteOpen(false);
 	});
+	useKeybind('ArrowLeft', () => back());
+	useKeybind('ArrowRight', () => forward());
 
 	return (
 		<div

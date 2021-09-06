@@ -1,21 +1,21 @@
-import { useCallback } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useCallback, useContext } from 'react';
+import RouteHistoryContext from './RouteHistoryContext';
 
 export function useSetRootItemId() {
-	const history = useHistory();
+	const routeHistory = useContext(RouteHistoryContext);
 
 	return useCallback(
 		(id: string) => {
-			history.push('/i/' + id);
+			routeHistory.go('/i/' + id);
 		},
-		[history]
+		[routeHistory]
 	);
 }
 
 export function useBack() {
-	const history = useHistory();
+	return useContext(RouteHistoryContext).back;
+}
 
-	return useCallback(() => {
-		history.goBack();
-	}, [history]);
+export function useForward() {
+	return useContext(RouteHistoryContext).forward;
 }
