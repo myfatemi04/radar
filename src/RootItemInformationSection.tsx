@@ -1,7 +1,8 @@
-import { useContext, useRef } from 'react';
+import { useContext, useMemo, useRef } from 'react';
 import AutoresizableTextarea from './AutoresizableTextarea';
 import DatetimePickerNullable from './DatetimePickerNullable';
 import ItemStoreContext from './ItemStoreContext';
+import Path from './Path';
 import { ItemProps } from './types';
 
 export default function RootItemInformationSection({
@@ -9,7 +10,17 @@ export default function RootItemInformationSection({
 }: {
 	item: ItemProps;
 }) {
-	const { store } = useContext(ItemStoreContext);
+	const { store, state } = useContext(ItemStoreContext);
+
+	const pathsFromAbsoluteRoot = useMemo(() => {
+		const results = [];
+		for (const [path, item3] of state.bfs('0')) {
+			if (item.id === item3.id) {
+				results.push(path);
+			}
+		}
+		return results;
+	}, [item.id, state]);
 
 	const descriptionTextareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -25,6 +36,10 @@ export default function RootItemInformationSection({
 				value={item.name}
 				onChange={e => store.setItemName(item.id, e.target.value)}
 			/>
+
+			{pathsFromAbsoluteRoot.map(path => (
+				<Path style={{ marginBottom: '0.25rem' }} items={path} />
+			))}
 
 			<pre style={{ marginBottom: '0.25rem', color: '#808080' }}>Target</pre>
 			<DatetimePickerNullable

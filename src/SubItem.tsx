@@ -4,6 +4,7 @@ import AutoresizableTextarea from './AutoresizableTextarea';
 import DatetimePickerNullable from './DatetimePickerNullable';
 import ItemStoreContext from './ItemStoreContext';
 import { useIndirectDependencyCompletionStatus } from './ItemUtilities';
+import Path from './Path';
 import { useSetRootItemId } from './RouteHooks';
 import { ItemProps } from './types';
 
@@ -18,7 +19,7 @@ function SubItem({
 }) {
 	useDebugValue(item);
 
-	const { store, state } = useContext(ItemStoreContext);
+	const { store } = useContext(ItemStoreContext);
 
 	const rootItemId = useContext(RootItemIdContext);
 	const setRootItemId = useSetRootItemId();
@@ -55,26 +56,7 @@ function SubItem({
 			<pre style={{ marginTop: 0, marginRight: '0.5rem' }}>{index}</pre>
 			<div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
 				{visiblePathItems.length > 0 && (
-					<span style={{ fontFamily: 'monospace', marginBottom: '0.5rem' }}>
-						{visiblePathItems.map((id, index) => {
-							const item = state.getItem(id)!;
-							return (
-								<>
-									<span
-										style={{
-											textDecoration: 'underline',
-											cursor: 'pointer',
-										}}
-										onClick={() => setRootItemId(item.id)}
-									>
-										{item.name}
-									</span>
-
-									{index + 1 < path.length - 2 && ' > '}
-								</>
-							);
-						})}
-					</span>
+					<Path items={visiblePathItems} style={{ marginBottom: '0.5rem' }} />
 				)}
 				<h2
 					style={{ cursor: 'pointer', margin: 0 }}
@@ -122,15 +104,17 @@ function SubItem({
 				/>
 
 				<div>
-					{item.id !== '0' && (
-						<button
-							onClick={() =>
-								store.removeDependencyFromItem(rootItemId, item.id)
-							}
-						>
-							Delete
-						</button>
-					)}
+					<button
+						onClick={() => store.duplicateItem(item.id, rootItemId, true)}
+					>
+						Duplicate
+					</button>
+
+					<button
+						onClick={() => store.removeDependencyFromItem(rootItemId, item.id)}
+					>
+						Delete
+					</button>
 				</div>
 			</div>
 		</div>

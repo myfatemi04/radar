@@ -1,4 +1,5 @@
 import * as immutable from 'immutable';
+import createEmptyItem from './createEmptyItem';
 import { ItemProps } from './types';
 
 export class ItemStoreState extends immutable.Record({
@@ -255,6 +256,42 @@ class ItemStore {
 					name,
 				})
 			);
+		}
+	}
+
+	duplicateItem(
+		id: string,
+		parentId: string,
+		createSeparateDependencies: boolean = true
+	) {
+		this.duplicateItemInternal(id, parentId, createSeparateDependencies, true);
+	}
+
+	private duplicateItemInternal(
+		id: string,
+		parentId: string,
+		createSeparateDependencies: boolean,
+		addCopyToName: boolean
+	) {
+		const item = this.state.getItem(id);
+		if (item) {
+			const newItem = createEmptyItem({
+				...item,
+				name: addCopyToName ? `${item.name} (copy)` : item.name,
+				dependencyIds: createSeparateDependencies ? [] : item.dependencyIds,
+				completedAt: null,
+			});
+			this.state = this.state.set(
+				'items',
+				this.state.items.set(newItem.id, newItem)
+			);
+			this.addDependencyToItem(parentId, newItem.id);
+			if (createSeparateDependencies) {
+				for (let dependencyId of item.dependencyIds) {
+					// Duplicate the dependency and add it to the new item
+					this.duplicateItemInternal(dependencyId, newItem.id, true, false);
+				}
+			}
 		}
 	}
 }
