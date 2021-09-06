@@ -8,8 +8,6 @@ const RouteHistoryProvider: FC = ({ children }) => {
 	const [history, setHistory] = useState<string[]>([]);
 	const [pos, setPos] = useState(0);
 
-	console.log({ history, pos });
-
 	const value = useMemo(() => {
 		return {
 			history,
