@@ -1,12 +1,12 @@
 import ReactDOM from 'react-dom';
-import App from './App';
 import './index.css';
 import ItemStoreProvider from './ItemStoreProvider';
 import reportWebVitals from './reportWebVitals';
+import Routes from './Routes';
 
 ReactDOM.render(
 	<ItemStoreProvider>
-		<App />
+		<Routes />
 	</ItemStoreProvider>,
 	document.getElementById('root')
 );

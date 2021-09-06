@@ -3,7 +3,6 @@ import { CommandPaletteContext } from './AppContexts';
 import { CommandPaletteWrapper } from './CommandPalette';
 import GoalProgressBar from './GoalProgressBar';
 import ItemStoreContext from './ItemStoreContext';
-import NavigateToPreviousRootItemContext from './NavigateToPreviousRootItemContext';
 import RootItemGoalsView from './RootItemGoalsView';
 import RootItemInformationSection from './RootItemInformationSection';
 import RootItemPriorityView from './RootItemPriorityView';
@@ -17,8 +16,6 @@ enum RootItemView {
 
 export default function RootItem({ item }: { item: ItemProps }) {
 	const [view, setView] = useState(RootItemView.Goals);
-
-	const back = useContext(NavigateToPreviousRootItemContext);
 
 	const { state } = useContext(ItemStoreContext);
 
@@ -71,18 +68,6 @@ export default function RootItem({ item }: { item: ItemProps }) {
 					<CommandPaletteWrapper itemIndexToItemId={indexToItemId} />
 				</CommandPaletteContext.Provider>
 			)}
-
-			<div style={{ display: 'flex', marginTop: '1rem' }}>
-				<button
-					style={{
-						padding: '0.5rem 1rem',
-						marginRight: '1rem',
-					}}
-					onClick={back}
-				>
-					Back
-				</button>
-			</div>
 
 			<div style={{ marginTop: '0.5rem', fontFamily: 'monospace' }}>
 				<span

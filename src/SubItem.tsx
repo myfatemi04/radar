@@ -4,6 +4,7 @@ import AutoresizableTextarea from './AutoresizableTextarea';
 import DatetimePickerNullable from './DatetimePickerNullable';
 import ItemStoreContext from './ItemStoreContext';
 import { useIndirectDependencyCompletionStatus } from './ItemUtilities';
+import { useSetRootItemId } from './RouteHooks';
 import { ItemProps } from './types';
 
 function SubItem({
@@ -19,7 +20,8 @@ function SubItem({
 
 	const { store, state } = useContext(ItemStoreContext);
 
-	const [rootItemId, setRootItemId] = useContext(RootItemIdContext);
+	const rootItemId = useContext(RootItemIdContext);
+	const setRootItemId = useSetRootItemId();
 
 	const [completedDependencyCount, totalDependencyCount] =
 		useIndirectDependencyCompletionStatus(item.id);

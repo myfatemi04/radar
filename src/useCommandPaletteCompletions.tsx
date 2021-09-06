@@ -1,6 +1,7 @@
 import { ReactNode, useContext } from 'react';
 import { RootItemIdContext } from './AppContexts';
 import ItemStoreContext from './ItemStoreContext';
+import { useSetRootItemId } from './RouteHooks';
 
 export type Suggestion = {
 	label: ReactNode;
@@ -18,7 +19,7 @@ export default function useCommandPaletteSuggestions(
 ): Suggestion[] {
 	const [rootItemId] = useContext(RootItemIdContext);
 	const { state } = useContext(ItemStoreContext);
-	const [, setRootItemId] = useContext(RootItemIdContext);
+	const setRootItemId = useSetRootItemId();
 
 	if (text.startsWith('/')) {
 		if (text.startsWith('/t ') && text.length > 3) {

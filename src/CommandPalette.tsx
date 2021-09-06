@@ -10,7 +10,7 @@ import { CommandPaletteContext, RootItemIdContext } from './AppContexts';
 import createEmptyItem from './createEmptyItem';
 import isNaturalNumber from './isDigit';
 import ItemStoreContext from './ItemStoreContext';
-import NavigateToPreviousRootItemContext from './NavigateToPreviousRootItemContext';
+import { useBack, useSetRootItemId } from './RouteHooks';
 import useCommandPaletteSuggestions from './useCommandPaletteCompletions';
 import useKeybind from './useKeybind';
 
@@ -40,11 +40,14 @@ export function CommandPalette({
 	itemIndexToItemId: (index: number) => string | null;
 }) {
 	const [command, setCommand] = useState('');
-	const [rootItemId, setRootItemId] = useContext(RootItemIdContext);
+	const rootItemId = useContext(RootItemIdContext);
+	const setRootItemId = useSetRootItemId();
 	const ref = useRef<HTMLInputElement>(null);
 	const { store } = useContext(ItemStoreContext);
 
 	const [, setCommandPaletteOpen] = useContext(CommandPaletteContext);
+
+	const back = useBack();
 
 	const done = useCallback(() => {
 		setCommand('');
@@ -54,8 +57,6 @@ export function CommandPalette({
 	useLayoutEffect(() => {
 		ref.current?.focus();
 	}, []);
-
-	const back = useContext(NavigateToPreviousRootItemContext);
 
 	const onEnteredCommand = useCallback(() => {
 		if (command === '' || command === '/') {
