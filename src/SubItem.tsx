@@ -1,6 +1,6 @@
 import { useContext, useDebugValue, useMemo } from 'react';
+import TextareaAutosize from 'react-autosize-textarea/lib';
 import { RootItemIdContext } from './AppContexts';
-import AutoresizableTextarea from './AutoresizableTextarea';
 import DatetimePickerNullable from './DatetimePickerNullable';
 import ItemStoreContext from './ItemStoreContext';
 import { useIndirectDependencyCompletionStatus } from './ItemUtilities';
@@ -96,11 +96,16 @@ function SubItem({
 				<pre style={{ marginBottom: '0.25rem', color: '#808080' }}>
 					Description
 				</pre>
-				<AutoresizableTextarea
+				<TextareaAutosize
 					style={{ marginBottom: '0.5rem' }}
 					placeholder='...'
 					value={item.description}
-					onChange={e => store.setItemDescription(item.id, e.target.value)}
+					onChange={e =>
+						store.setItemDescription(
+							item.id,
+							(e.target as HTMLTextAreaElement).value
+						)
+					}
 				/>
 
 				<div>

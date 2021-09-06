@@ -24,6 +24,7 @@ export default function Path({
 								cursor: 'pointer',
 							}}
 							onClick={() => setRootItemId(item.id)}
+							key={index}
 						>
 							{item.name}
 						</span>

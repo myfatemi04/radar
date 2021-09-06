@@ -1,5 +1,5 @@
 import { useContext, useMemo, useRef } from 'react';
-import AutoresizableTextarea from './AutoresizableTextarea';
+import TextareaAutosize from 'react-autosize-textarea/lib';
 import DatetimePickerNullable from './DatetimePickerNullable';
 import ItemStoreContext from './ItemStoreContext';
 import Path from './Path';
@@ -51,12 +51,17 @@ export default function RootItemInformationSection({
 			<pre style={{ marginBottom: '0.25rem', color: '#808080' }}>
 				Description
 			</pre>
-			<AutoresizableTextarea
+			<TextareaAutosize
 				style={{ marginBottom: '0.5rem' }}
 				placeholder='...'
 				value={item.description}
 				cols={80}
-				onChange={e => store.setItemDescription(item.id, e.target.value)}
+				onChange={e =>
+					store.setItemDescription(
+						item.id,
+						(e.target as HTMLTextAreaElement).value
+					)
+				}
 				ref={descriptionTextareaRef}
 			/>
 		</>
