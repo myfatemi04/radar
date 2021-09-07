@@ -28,8 +28,7 @@ export default function Path({
 						>
 							{item.name}
 						</span>
-
-						<span>{index + 1 < items.length && ' > '}</span>
+						{index + 1 < items.length && ' > '}
 					</Fragment>
 				);
 			})}
