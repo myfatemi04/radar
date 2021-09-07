@@ -1,5 +1,5 @@
-import { useContext, useMemo, useRef } from 'react';
-import TextareaAutosize from 'react-autosize-textarea/lib';
+import { useContext, useMemo } from 'react';
+import ContentEditable from 'react-contenteditable';
 import DatetimePickerNullable from './DatetimePickerNullable';
 import ItemStoreContext from './ItemStoreContext';
 import Path from './Path';
@@ -21,8 +21,6 @@ export default function RootItemInformationSection({
 		}
 		return results;
 	}, [item.id, state]);
-
-	const descriptionTextareaRef = useRef<HTMLTextAreaElement>(null);
 
 	return (
 		<>
@@ -51,18 +49,12 @@ export default function RootItemInformationSection({
 			<pre style={{ marginBottom: '0.25rem', color: '#808080' }}>
 				Description
 			</pre>
-			<TextareaAutosize
-				style={{ marginBottom: '0.5rem' }}
+			<ContentEditable
+				style={{ marginBottom: '0.5rem', fontFamily: 'monospace' }}
 				placeholder='...'
-				value={item.description}
-				cols={80}
-				onChange={e =>
-					store.setItemDescription(
-						item.id,
-						(e.target as HTMLTextAreaElement).value
-					)
-				}
-				ref={descriptionTextareaRef}
+				html={item.description}
+				spellCheck={false}
+				onChange={e => store.setItemDescription(item.id, e.target.value)}
 			/>
 		</>
 	);

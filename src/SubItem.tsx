@@ -1,5 +1,5 @@
 import { useContext, useDebugValue, useMemo } from 'react';
-import TextareaAutosize from 'react-autosize-textarea/lib';
+import ContentEditable from 'react-contenteditable';
 import { RootItemIdContext } from './AppContexts';
 import DatetimePickerNullable from './DatetimePickerNullable';
 import ItemStoreContext from './ItemStoreContext';
@@ -96,16 +96,17 @@ function SubItem({
 				<pre style={{ marginBottom: '0.25rem', color: '#808080' }}>
 					Description
 				</pre>
-				<TextareaAutosize
-					style={{ marginBottom: '0.5rem' }}
+				<ContentEditable
+					style={{
+						marginBottom: '0.5rem',
+						fontFamily: 'monospace',
+						backgroundColor:
+							item.description.trim().length > 0 ? 'transparent' : '#202020',
+					}}
+					spellCheck={false}
 					placeholder='...'
-					value={item.description}
-					onChange={e =>
-						store.setItemDescription(
-							item.id,
-							(e.target as HTMLTextAreaElement).value
-						)
-					}
+					html={item.description}
+					onChange={e => store.setItemDescription(item.id, e.target.value)}
 				/>
 
 				<div>
