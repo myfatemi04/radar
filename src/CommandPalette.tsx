@@ -12,7 +12,7 @@ import isNaturalNumber from './isDigit';
 import ItemStoreContext from './ItemStoreContext';
 import { useBack, useSetRootItemId } from './RouteHooks';
 import useCommandPaletteSuggestions from './useCommandPaletteCompletions';
-import useKeybind from './useKeybind';
+import useKeybind, { KeybindType } from './useKeybind';
 
 export const CompletionRow: FC<{ onClick: () => void }> = ({
 	children,
@@ -108,7 +108,12 @@ export function CommandPalette({
 		store,
 	]);
 
-	useKeybind('Enter', onEnteredCommand);
+	useKeybind(
+		'Enter',
+		onEnteredCommand,
+		KeybindType.DOWN,
+		ref.current ?? undefined
+	);
 
 	const suggestions = useCommandPaletteSuggestions(command);
 
