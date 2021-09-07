@@ -1,5 +1,6 @@
 import { ReactNode, useContext } from 'react';
 import { RootItemIdContext } from './AppContexts';
+import createEmptyItem from './createEmptyItem';
 import ItemStoreContext from './ItemStoreContext';
 import { useSetRootItemId } from './RouteHooks';
 
@@ -18,7 +19,7 @@ export default function useCommandPaletteSuggestions(
 	text: string
 ): Suggestion[] {
 	const rootItemId = useContext(RootItemIdContext);
-	const { state } = useContext(ItemStoreContext);
+	const { state, store } = useContext(ItemStoreContext);
 	const setRootItemId = useSetRootItemId();
 
 	if (text.startsWith('/')) {
@@ -34,7 +35,9 @@ export default function useCommandPaletteSuggestions(
 							<span style={{ fontFamily: 'monospace' }}>{rest}</span>
 						</>
 					),
-					onClick: () => {},
+					onClick: () => {
+						store.addItem(createEmptyItem({ name: rest }), rootItemId);
+					},
 				},
 			];
 		}
