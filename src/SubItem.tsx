@@ -1,6 +1,6 @@
 import { useContext, useDebugValue, useMemo } from 'react';
-import ContentEditable from 'react-contenteditable';
 import { RootItemIdContext } from './AppContexts';
+import ContentEditableTextbox from './ContentEditableTextbox';
 import DatetimePickerNullable from './DatetimePickerNullable';
 import ItemStoreContext from './ItemStoreContext';
 import { useIndirectDependencyCompletionStatus } from './ItemUtilities';
@@ -122,15 +122,8 @@ function SubItem({
 				<pre style={{ marginBottom: '0.25rem', color: '#808080' }}>
 					Description
 				</pre>
-				<ContentEditable
-					style={{
-						marginBottom: '0.5rem',
-						fontFamily: 'monospace',
-						backgroundColor:
-							item.description.trim().length > 0 ? 'transparent' : '#202020',
-					}}
-					spellCheck={false}
-					placeholder='...'
+				<ContentEditableTextbox
+					style={{ marginBottom: '0.5rem' }}
 					html={item.description}
 					onChange={e => store.setItemDescription(item.id, e.target.value)}
 				/>

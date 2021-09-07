@@ -1,5 +1,5 @@
 import { useContext, useMemo } from 'react';
-import ContentEditable from 'react-contenteditable';
+import ContentEditableTextbox from './ContentEditableTextbox';
 import DatetimePickerNullable from './DatetimePickerNullable';
 import ItemStoreContext from './ItemStoreContext';
 import Path from './Path';
@@ -49,16 +49,9 @@ export default function RootItemInformationSection({
 			<pre style={{ marginBottom: '0.25rem', color: '#808080' }}>
 				Description
 			</pre>
-			<ContentEditable
-				style={{
-					marginBottom: '0.5rem',
-					fontFamily: 'monospace',
-					backgroundColor:
-						item.description.trim().length > 0 ? 'transparent' : '#202020',
-				}}
-				placeholder='...'
+			<ContentEditableTextbox
+				style={{ marginBottom: '0.5rem' }}
 				html={item.description}
-				spellCheck={false}
 				onChange={e => store.setItemDescription(item.id, e.target.value)}
 			/>
 		</>
