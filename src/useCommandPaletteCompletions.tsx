@@ -17,7 +17,7 @@ export type Suggestion = {
 export default function useCommandPaletteSuggestions(
 	text: string
 ): Suggestion[] {
-	const [rootItemId] = useContext(RootItemIdContext);
+	const rootItemId = useContext(RootItemIdContext);
 	const { state } = useContext(ItemStoreContext);
 	const setRootItemId = useSetRootItemId();
 
