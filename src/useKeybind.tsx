@@ -8,11 +8,12 @@ export enum KeybindType {
 export default function useKeybind(
 	key: string,
 	callback: (event: KeyboardEvent) => void,
-	type: KeybindType = KeybindType.DOWN
+	type: KeybindType = KeybindType.DOWN,
+	target = document.body
 ) {
 	useEffect(() => {
 		const listener = (event: KeyboardEvent) => {
-			if (event.key === key) {
+			if (event.target === target && event.key === key) {
 				callback(event);
 			}
 		};
@@ -21,5 +22,5 @@ export default function useKeybind(
 		return () => {
 			window.removeEventListener(eventType, listener);
 		};
-	}, [callback, key, type]);
+	}, [callback, key, target, type]);
 }
