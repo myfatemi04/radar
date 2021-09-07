@@ -51,9 +51,11 @@ export class ItemStoreState extends immutable.Record({
 			const item = this.getItem(current);
 			if (item) {
 				yield [path, item];
-			}
-			for (const child of item!.dependencyIds) {
-				queue.push([[...path, child], child]);
+				for (const child of item.dependencyIds) {
+					queue.push([[...path, child], child]);
+				}
+			} else {
+				console.warn('Item not found:', current);
 			}
 		}
 	}
