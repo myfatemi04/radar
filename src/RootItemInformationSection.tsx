@@ -50,7 +50,12 @@ export default function RootItemInformationSection({
 				Description
 			</pre>
 			<ContentEditable
-				style={{ marginBottom: '0.5rem', fontFamily: 'monospace' }}
+				style={{
+					marginBottom: '0.5rem',
+					fontFamily: 'monospace',
+					backgroundColor:
+						item.description.trim().length > 0 ? 'transparent' : '#202020',
+				}}
 				placeholder='...'
 				html={item.description}
 				spellCheck={false}

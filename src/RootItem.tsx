@@ -6,6 +6,7 @@ import ItemStoreContext from './ItemStoreContext';
 import RootItemGoalsView from './RootItemGoalsView';
 import RootItemInformationSection from './RootItemInformationSection';
 import RootItemPriorityView from './RootItemPriorityView';
+import RootItemSearchBar from './RootItemSearchBar';
 import { useBack, useForward } from './RouteHooks';
 import { ItemProps } from './types';
 import useKeybind from './useKeybind';
@@ -65,6 +66,7 @@ export default function RootItem({ item }: { item: ItemProps }) {
 			}}
 		>
 			<RootItemInformationSection item={item} />
+			<RootItemSearchBar />
 
 			{commandPaletteOpen && (
 				<CommandPaletteContext.Provider

@@ -16,12 +16,12 @@ export function useCreateDependencyWithName(id: string) {
 	return createItemAsDependency;
 }
 
-export function useItemsSearchResults(text: string, root: ItemProps) {
+export function useItemsSearchResults(text: string, rootItemId: string) {
 	const { state } = useContext(ItemStoreContext);
 
 	return useMemo(() => {
-		return Array.from(state.search(text, root.id));
-	}, [state, text, root]);
+		return Array.from(state.search(text, rootItemId));
+	}, [state, text, rootItemId]);
 }
 
 export function useIndirectDependencyCompletionStatus(
