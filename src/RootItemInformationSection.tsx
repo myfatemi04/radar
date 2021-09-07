@@ -35,8 +35,8 @@ export default function RootItemInformationSection({
 				onChange={e => store.setItemName(item.id, e.target.value)}
 			/>
 
-			{pathsFromAbsoluteRoot.map(path => (
-				<Path style={{ marginBottom: '0.25rem' }} items={path} />
+			{pathsFromAbsoluteRoot.map((path, index) => (
+				<Path style={{ marginBottom: '0.25rem' }} items={path} key={index} />
 			))}
 
 			<pre style={{ marginBottom: '0.25rem', color: '#808080' }}>Target</pre>
