@@ -28,8 +28,8 @@ export default function RootItemPriorityView({
 			// Both are completed, or both are not completed
 			// Sort by time
 
-			const firstTime = a.target?.getTime() ?? defaultTime;
-			const secondTime = b.target?.getTime() ?? defaultTime;
+			const firstTime = state.getEarliestTarget(a.id)[1] ?? defaultTime;
+			const secondTime = state.getEarliestTarget(b.id)[1] ?? defaultTime;
 
 			// Sort by soonest to latest
 			return firstTime < secondTime ? -1 : 1;
