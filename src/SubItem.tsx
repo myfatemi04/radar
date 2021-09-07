@@ -19,7 +19,7 @@ function SubItem({
 }) {
 	useDebugValue(item);
 
-	const { store } = useContext(ItemStoreContext);
+	const { store, state } = useContext(ItemStoreContext);
 
 	const rootItemId = useContext(RootItemIdContext);
 	const setRootItemId = useSetRootItemId();
@@ -41,6 +41,13 @@ function SubItem({
 		() => (path.length > 0 ? path.slice(1, path.length - 1) : []),
 		[path]
 	);
+
+	const [earliestTargetItemId, earliestTarget] = state.getEarliestTarget(
+		item.id
+	);
+	const earliestTargetItem = earliestTargetItemId
+		? state.getItem(earliestTargetItemId) ?? null
+		: null;
 
 	return (
 		<div
@@ -86,6 +93,25 @@ function SubItem({
 						)
 					}
 				</div>
+
+				{earliestTargetItem && earliestTargetItemId !== item.id && (
+					<>
+						<pre style={{ marginBottom: '0.25rem', color: '#808080' }}>
+							Indirect target
+						</pre>
+						<div style={{ display: 'flex', flexDirection: 'row' }}>
+							<button
+								onClick={() => setRootItemId(earliestTargetItem.id)}
+								style={{ marginRight: '0.75rem' }}
+							>
+								{earliestTargetItem.name}
+							</button>
+							<pre style={{ margin: 0 }}>
+								{earliestTarget!.toLocaleString()}
+							</pre>
+						</div>
+					</>
+				)}
 
 				<pre style={{ marginBottom: '0.25rem', color: '#808080' }}>Target</pre>
 				<DatetimePickerNullable

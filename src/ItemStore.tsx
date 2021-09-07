@@ -98,6 +98,36 @@ export class ItemStoreState extends immutable.Record({
 
 		return [completed, total];
 	}
+
+	*getAllPathways(id: string, rootItemId = '0'): IterableIterator<string[]> {
+		for (const [path, item] of this.bfs(rootItemId)) {
+			if (item.id === id) {
+				yield path;
+			}
+		}
+	}
+
+	getEarliestTarget(id: string): [string, Date] | [null, null] {
+		let earliestId: string | null = null;
+		let earliest: Date | null = null;
+		for (const path of this.getAllPathways(id)) {
+			for (const itemId of path) {
+				const item = this.getItem(itemId);
+				if (!item?.target) {
+					continue;
+				}
+				if (earliest === null) {
+					earliest = item.target;
+					earliestId = item.id;
+				} else if (earliest.getTime() > item.target.getTime()) {
+					earliest = item.target;
+					earliestId = item.id;
+				}
+			}
+		}
+		// @ts-expect-error
+		return [earliestId, earliest];
+	}
 }
 
 class ItemStore {
