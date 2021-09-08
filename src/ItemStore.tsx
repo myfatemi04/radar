@@ -93,10 +93,16 @@ export class ItemStoreState extends immutable.Record({
 			return [0, 0];
 		}
 
+		const visited = new Set<string>();
+
 		let completed = 0;
 		let total = 0;
 
 		for (const [, item] of this.bfs(id)) {
+			if (visited.has(item.id)) {
+				continue;
+			}
+			visited.add(item.id);
 			if (item.dependencyIds.length === 0) {
 				completed += item.completedAt !== null ? 1 : 0;
 				total += 1;
