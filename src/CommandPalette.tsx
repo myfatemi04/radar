@@ -115,6 +115,8 @@ export function CommandPalette({
 		ref.current ?? undefined
 	);
 
+	useKeybind('Escape', done, KeybindType.DOWN, ref.current ?? undefined);
+
 	const suggestions = useCommandPaletteSuggestions(command);
 
 	return (
