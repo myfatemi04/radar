@@ -8,7 +8,7 @@ import { ItemProps } from './types';
 export default function RootItemPriorityView({
 	leaves,
 }: {
-	leaves: [string[], ItemProps][];
+	leaves: [string[][], ItemProps][];
 }) {
 	const { state } = useContext(ItemStoreContext);
 
@@ -39,9 +39,9 @@ export default function RootItemPriorityView({
 	return (
 		<div style={{ display: 'flex', flexDirection: 'column' }}>
 			{sortedLeaves.map(
-				([path, leaf], index) =>
+				([paths, leaf], index) =>
 					leaf && (
-						<SubItem key={leaf.id} item={leaf} index={index} path={path} />
+						<SubItem key={leaf.id} item={leaf} index={index} paths={paths} />
 					)
 			)}
 		</div>

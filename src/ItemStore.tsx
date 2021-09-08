@@ -41,13 +41,14 @@ export class ItemStoreState extends immutable.Record({
 
 	*bfs(id: string): IterableIterator<[string[], ItemProps]> {
 		const queue: [string[], string][] = [[['0'], id]];
-		const visited = new Set<string>();
+		// assume a directed acyclic graph (DAG)
+		// const visited = new Set<string>();
 		while (queue.length) {
 			const [path, current] = queue.shift()!;
-			if (visited.has(current)) {
-				continue;
-			}
-			visited.add(current);
+			// if (visited.has(current)) {
+			// 	continue;
+			// }
+			// visited.add(current);
 			const item = this.getItem(current);
 			if (item) {
 				yield [path, item];
@@ -60,12 +61,20 @@ export class ItemStoreState extends immutable.Record({
 		}
 	}
 
-	*leaves(id: string): IterableIterator<[string[], ItemProps]> {
+	leaves(id: string): [string[][], ItemProps][] {
+		const pathsByItem = new Map<string, string[][]>();
 		for (const [path, item] of this.bfs(id)) {
 			if (item.dependencyIds.length === 0) {
-				yield [path, item];
+				if (!pathsByItem.has(item.id)) {
+					pathsByItem.set(item.id, []);
+				}
+				pathsByItem.get(item.id)!.push(path);
 			}
 		}
+		return [...pathsByItem.keys()].map(id => [
+			pathsByItem.get(id)!,
+			this.getItem(id)!,
+		]);
 	}
 
 	*search(query: string, root: string = '0'): IterableIterator<ItemProps> {

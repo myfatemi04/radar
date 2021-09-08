@@ -11,11 +11,11 @@ import { ItemProps } from './types';
 function SubItem({
 	item,
 	index,
-	path,
+	paths,
 }: {
 	item: ItemProps;
 	index: number;
-	path: string[];
+	paths: string[][];
 }) {
 	useDebugValue(item);
 
@@ -37,9 +37,12 @@ function SubItem({
 
 	const borderColor = completed ? '#80ff80' : '#ffffff';
 
-	const visiblePathItems = useMemo(
-		() => (path.length > 0 ? path.slice(1, path.length - 1) : []),
-		[path]
+	const visibleItemsInEachPath = useMemo(
+		() =>
+			paths.map(path =>
+				path.length > 0 ? path.slice(1, path.length - 1) : []
+			),
+		[paths]
 	);
 
 	const [earliestTargetItemId, earliestTarget] = state.getEarliestTarget(
@@ -62,9 +65,17 @@ function SubItem({
 		>
 			<pre style={{ marginTop: 0, marginRight: '0.5rem' }}>{index}</pre>
 			<div style={{ display: 'flex', flexDirection: 'column', width: '100%' }}>
-				{visiblePathItems.length > 0 && (
-					<Path items={visiblePathItems} style={{ marginBottom: '0.5rem' }} />
-				)}
+				{visibleItemsInEachPath.map((visibleItemsInPath, index) => {
+					return (
+						visibleItemsInPath.length > 0 && (
+							<Path
+								key={index}
+								items={visibleItemsInPath}
+								style={{ marginBottom: '0.5rem' }}
+							/>
+						)
+					);
+				})}
 				<h2
 					style={{ cursor: 'pointer', margin: 0 }}
 					onClick={() => setRootItemId(item.id)}

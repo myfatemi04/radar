@@ -18,7 +18,7 @@ export default function RootItemGoalsView({ item }: { item: ItemProps }) {
 							key={dependencyId}
 							item={dependency}
 							index={index}
-							path={[]}
+							paths={[]}
 						/>
 					);
 				} else {
