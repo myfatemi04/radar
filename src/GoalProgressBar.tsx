@@ -23,7 +23,7 @@ export default function GoalProgressBar({ item }: { item: ItemProps }) {
 				fontSize: '1rem',
 			}}
 		>
-			{((completed / total) * 100).toFixed(0) + '%'}
+			{((completed / total) * 100).toFixed(0)}% ({completed}/{total})
 		</div>
 	);
 }
