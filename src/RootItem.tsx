@@ -7,6 +7,7 @@ import RootItemGoalsView from './RootItemGoalsView';
 import RootItemInformationSection from './RootItemInformationSection';
 import RootItemPriorityView from './RootItemPriorityView';
 import RootItemSearchBar from './RootItemSearchBar';
+import RootItemTreeView from './RootItemTreeView';
 import { useBack, useForward } from './RouteHooks';
 import { ItemProps } from './types';
 import useKeybind from './useKeybind';
@@ -14,6 +15,7 @@ import useKeybind from './useKeybind';
 enum RootItemView {
 	Goals = 'goals',
 	Priority = 'priority',
+	Tree = 'tree',
 }
 
 export default function RootItem({ item }: { item: ItemProps }) {
@@ -81,7 +83,6 @@ export default function RootItem({ item }: { item: ItemProps }) {
 					style={{
 						fontSize: '2rem',
 						fontWeight: 'bold',
-						marginRight: '1rem',
 						cursor: 'pointer',
 						textDecoration: view === RootItemView.Goals ? 'underline' : 'none',
 					}}
@@ -94,6 +95,7 @@ export default function RootItem({ item }: { item: ItemProps }) {
 						fontSize: '2rem',
 						fontWeight: 'bold',
 						cursor: 'pointer',
+						marginLeft: '1rem',
 						textDecoration:
 							view === RootItemView.Priority ? 'underline' : 'none',
 					}}
@@ -101,14 +103,28 @@ export default function RootItem({ item }: { item: ItemProps }) {
 				>
 					Priority
 				</span>
+				<span
+					style={{
+						fontSize: '2rem',
+						fontWeight: 'bold',
+						cursor: 'pointer',
+						marginLeft: '1rem',
+						textDecoration: view === RootItemView.Tree ? 'underline' : 'none',
+					}}
+					onClick={() => setView(RootItemView.Tree)}
+				>
+					Tree
+				</span>
 			</div>
 
 			{item.dependencyIds.length > 0 && <GoalProgressBar item={item} />}
 
 			{view === RootItemView.Goals ? (
 				<RootItemGoalsView item={item} />
-			) : (
+			) : view === RootItemView.Priority ? (
 				<RootItemPriorityView leaves={leaves} />
+			) : (
+				view === RootItemView.Tree && <RootItemTreeView />
 			)}
 		</div>
 	);
