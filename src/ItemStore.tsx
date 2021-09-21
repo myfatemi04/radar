@@ -10,10 +10,11 @@ export class ItemStoreState extends immutable.Record({
 		if (!item) {
 			return false;
 		}
-		if (item.completedAt !== null) {
-			return true;
-		}
-		if (item.dependencyIds.length === 0) {
+		return item.completedAt !== null;
+	}
+	allDependenciesCompleted(id: string): boolean {
+		const item = this.items.get(id);
+		if (!item) {
 			return false;
 		}
 
@@ -98,13 +99,21 @@ export class ItemStoreState extends immutable.Record({
 		let completed = 0;
 		let total = 0;
 
-		for (const [, item] of this.bfs(id)) {
+		for (const [path, item] of this.bfs(id)) {
 			if (visited.has(item.id)) {
 				continue;
 			}
 			visited.add(item.id);
 			if (item.dependencyIds.length === 0) {
-				completed += item.completedAt !== null ? 1 : 0;
+				if (item.completedAt !== null) {
+					completed++;
+				} else {
+					for (const parentId of path) {
+						if (this.getItem(parentId)?.completedAt !== null) {
+							completed++;
+						}
+					}
+				}
 				total += 1;
 			}
 		}
